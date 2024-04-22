@@ -14,6 +14,7 @@ document.body.appendChild(renderer.domElement);
 const quadrado = new THREE.BoxGeometry(1,0.1,1); //qudrados tem 1 de largura (x), 0.1 de altura (y) e 1 de profundidade (z)
 const quadradoVerde = new THREE.MeshBasicMaterial({color:0x66CDAA});
 const quadradoBranco = new THREE.MeshBasicMaterial({color:0xF8F8FF});
+const mesa = new THREE.BoxGeometry(20,0.2,20);
 
 
 const tabuleiro = new THREE.Group(); // Tabuleiro resultante é 10x10 em coordenadas U-V
@@ -48,6 +49,7 @@ CamaraPerspetiva.lookAt(10,0,10);
 
 function Start()
 {
+    cena.add(mesa);
     cena.add(tabuleiro);
     cena.add(quadrado);
     cena.add(CamaraPerspetiva); // Adicionando a câmera perspectiva à cena
