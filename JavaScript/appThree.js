@@ -16,7 +16,7 @@ const quadradoVerde = new THREE.MeshBasicMaterial({color:0x66CDAA});
 const quadradoBranco = new THREE.MeshBasicMaterial({color:0xF8F8FF});
 
 
-const tabuleiro = new THREE.Group();
+const tabuleiro = new THREE.Group(); // Tabuleiro resultante é 10x10 em coordenadas U-V
 
 //loop para criar o tabuleiro com os quadrados criados
 
