@@ -44,11 +44,12 @@ for (let x=0; x<10; x++) //linhas
 }
 
 CamaraPerspetiva.position.set(-2,7,0);
-CamaraPerspetiva.lookAt(1.5,2,0);
+CamaraPerspetiva.lookAt(10,0,10);
 
 function Start()
 {
     cena.add(tabuleiro);
+    cena.add(quadrado);
     cena.add(CamaraPerspetiva); // Adicionando a câmera perspectiva à cena
     renderer.render(cena, CamaraPerspetiva);
     requestAnimationFrame(loop);
