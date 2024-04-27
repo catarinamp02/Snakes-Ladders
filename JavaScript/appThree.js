@@ -37,9 +37,10 @@ var materialCubo = new THREE.MeshBasicMaterial({map:texturaMesa});
 var mesa = new THREE.Mesh(gemoetriaCubo,materialCubo);
 mesa.position.set(0,-1,0);
 
-CamaraPerspetiva.position.set(0,10,15); 
+CamaraPerspetiva.position.set(0,10,28); 
+//controls.update();
 
-// Controls
+//const controls = new OrbitControls(CamaraPerspetiva, renderer.domElement);
 
 
 function Start()
