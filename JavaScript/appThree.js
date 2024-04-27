@@ -1,5 +1,3 @@
-document.addEventListener('DOMContentLoaded', Start);
-
 const renderer = new THREE.WebGLRenderer();
 //janela
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -29,6 +27,7 @@ const CamaraPerspetiva = new THREE.PerspectiveCamera(
 
 
 const AxesHelper = new THREE.AxesHelper(5);
+cena.add(AxesHelper);
 
 var texturaMesa = new THREE.TextureLoader().load('./Imagens/madeira.jpg');
 
@@ -36,16 +35,20 @@ var gemoetriaCubo = new THREE.BoxGeometry(20,1,20);
 var materialCubo = new THREE.MeshBasicMaterial({map:texturaMesa});
 var mesa = new THREE.Mesh(gemoetriaCubo,materialCubo);
 mesa.position.set(0,-1,0);
+cena.add(mesa);
 
 CamaraPerspetiva.position.set(0,10,28); 
 //controls.update();
 
+
 //const controls = new OrbitControls(CamaraPerspetiva, renderer.domElement);
 
+//Para ajustar o tamanho da janela 
+CamaraPerspetiva.aspect = window.innerWidth / window.innerHeight;
+CamaraPerspetiva.updateProjectionMatrix();
 
-function Start()
-{
-    cena.add(AxesHelper);
-    cena.add(mesa);
-    renderer.render(cena, CamaraPerspetiva);
-}
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+renderer.render(cena, CamaraPerspetiva);
+
+
