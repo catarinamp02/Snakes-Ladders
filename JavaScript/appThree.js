@@ -33,10 +33,9 @@ const CamaraPerspetiva = new THREE.PerspectiveCamera(
 
 //const AxesHelper = new THREE.AxisHelper(5);
 
+var texturaMesa = new THREE.TextureLoader().load('./Imagens/madeira.jpg');
 
-var texturaMesa = new THREE.textureLoader().load('/Imagens/mandeira.jpg');
-
-vargemoetriaCubo = new THREE.BoxGeometry(20,1,20);
+var gemoetriaCubo = new THREE.BoxGeometry(20,1,20);
 var materialCubo = new THREE.MeshBasicMaterial({map:texturaMesa});
 var mesa = new THREE.Mesh(gemoetriaCubo,materialCubo);
 mesa.position.set(0,-1,0);
