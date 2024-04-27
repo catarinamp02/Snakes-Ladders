@@ -23,8 +23,9 @@ const CamaraPerspetiva = new THREE.PerspectiveCamera(
     75,                                                     //fov
     window.innerWidth/window.innerHeight,                   //aspect ratio
      0.1,                                                   //near plane
-     1000);                                                 //far plane 
+     1000                                                 //far plane 
 
+);
 
 const AxesHelper = new THREE.AxesHelper(5);
 cena.add(AxesHelper);
