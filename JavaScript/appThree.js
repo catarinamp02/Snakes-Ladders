@@ -28,10 +28,7 @@ const CamaraPerspetiva = new THREE.PerspectiveCamera(
      1000);                                                 //far plane 
 
 
-
-//const controls = new OrbitControls(CamaraPerspetiva, renderer.domElement);
-
-//const AxesHelper = new THREE.AxisHelper(5);
+const AxesHelper = new THREE.AxesHelper(5);
 
 var texturaMesa = new THREE.TextureLoader().load('./Imagens/madeira.jpg');
 
@@ -41,11 +38,13 @@ var mesa = new THREE.Mesh(gemoetriaCubo,materialCubo);
 mesa.position.set(0,-1,0);
 
 CamaraPerspetiva.position.set(0,10,15); 
-//controls.update();
+
+// Controls
+
 
 function Start()
 {
-    //cena.add(AxesHelper);
+    cena.add(AxesHelper);
     cena.add(mesa);
     renderer.render(cena, CamaraPerspetiva);
 }
