@@ -4,6 +4,7 @@ var cena = new THREE.Scene();
 var CamaraOrtografica = new THREE.OrthographicCamera(-1,1,1,-1,-10,10);
 var CamaraPerspetiva = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight, 0.1,1000);
 var renderer = new THREE.WebGLRenderer();
+var materialTextura = new THREE.MeshBasicMaterial( { map:textura } );
  
 
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -15,6 +16,9 @@ const quadrado = new THREE.BoxGeometry(1,0.1,1); //qudrados tem 1 de largura (x)
 const quadradoVerde = new THREE.MeshBasicMaterial({color:0x66CDAA});
 const quadradoBranco = new THREE.MeshBasicMaterial({color:0xF8F8FF});
 
+var geometria = new THREE.BufferGeometry();
+
+var texturaLoader = new THREE.TextureLoader();
 
 const tabuleiro = new THREE.Group(); // Tabuleiro resultante é 10x10 em coordenadas U-V
 
@@ -42,6 +46,22 @@ for (let x=0; x<10; x++) //linhas
         tabuleiro.add(cubo);
     }
 }
+
+var meshTabuleiro = new THREE.Mesh(geometriaTabuleiro, materialTextura);
+var geometriaTabuleiro = new THREE.BoxBufferGeometry(1,1,1);
+
+//Primeiro, carregar a textura
+var textura = new THREE.TextureLoader().load('./Imagens/snakesladdersCORTADA.jpg');
+
+
+
+
+var uvAttribute = geometriaTabuleiro.getAttribute('uv');
+
+uvAttribute.setXY(0,0,0)
+uvAttribute.setXY(1,0,10)
+uvAttribute.setXY(2,10,0)
+uvAttribute.setXY(3,10,10)
 
 CamaraPerspetiva.position.set(-2,7,0);
 CamaraPerspetiva.lookAt(1.5,2,0);
