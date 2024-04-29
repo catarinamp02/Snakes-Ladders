@@ -14,7 +14,7 @@ function init() {
   renderer.setClearColor(0xaaaaaa);
   document.body.appendChild(renderer.domElement);
 
-
+  const bege = new THREE.Color(0xCCA231);
   var texturaMesa = texturaLoader.load('./Imagens/madeira.jpg');
 
  
@@ -25,9 +25,28 @@ function init() {
   scene.add(base);
 
   const texturatabuleiro = texturaLoader.load('./Imagens/base_tabuleiro.jpg');
-  const tabuleiroGeometria = new THREE.BoxGeometry(10,10,0.5);
-  const tabuleiroMaterial = new THREE.MeshBasicMaterial({map:texturatabuleiro})
-  const tabuleiro = new THREE.Mesh(tabuleiroGeometria, tabuleiroMaterial);
+//   const tabuleiroGeometria = new THREE.BoxGeometry(10,10,0.5);
+//   const tabuleiroMaterial = new THREE.MeshBasicMaterial({map:texturatabuleiro})
+  const tabuleiroMaterial = [ 
+                              new THREE.MeshLambertMaterial({color: 0xCFAA45}),
+                              new THREE.MeshLambertMaterial({color: 0xCFAA45}),
+                              new THREE.MeshLambertMaterial({color: 0xCFAA45}),
+                              new THREE.MeshLambertMaterial({color: 0xCFAA45}),
+                              new THREE.MeshLambertMaterial({color: 0xCFAA45}),
+                              new THREE.MeshLambertMaterial({color: 0xCFAA45})
+                            ]
+//   const tabuleiro = new THREE.Mesh(tabuleiroGeometria, tabuleiroMaterial);
+  const tabuleiro = new THREE.Mesh(
+            new THREE.BoxGeometry(10,10,0.5), 
+            [ 
+                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+                new THREE.MeshBasicMaterial({map:texturatabuleiro}),
+            ]
+        );
   tabuleiro.position.set(0,-0.5,0)
   tabuleiro.rotation.x = Math.PI/2;
   scene.add(tabuleiro);
