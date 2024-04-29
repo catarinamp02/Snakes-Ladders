@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
 
-var scene, camera, renderer, controls;
+var scene, camera, renderer, controls, texturaLoader = new THREE.TextureLoader;
  
 function init() {
   
@@ -15,14 +15,22 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
 
-  var texturaMesa = new THREE.TextureLoader().load('./Imagens/madeira.jpg');
+  var texturaMesa = texturaLoader.load('./Imagens/madeira.jpg');
 
  
-  var gemoetriaCubo = new THREE.BoxGeometry(20,1,20);
+  var geometriaCubo = new THREE.BoxGeometry(20,1,20);
   var materialCubo = new THREE.MeshBasicMaterial({map:texturaMesa});
-  var base = new THREE.Mesh(gemoetriaCubo,materialCubo);
+  var base = new THREE.Mesh(geometriaCubo,materialCubo);
   base.position.set(0,-1,0);
   scene.add(base);
+
+  const texturatabuleiro = texturaLoader.load('./Imagens/base_tabuleiro.jpg');
+  const tabuleiroGeometria = new THREE.BoxGeometry(10,10,0.5);
+  const tabuleiroMaterial = new THREE.MeshBasicMaterial({map:texturatabuleiro})
+  const tabuleiro = new THREE.Mesh(tabuleiroGeometria, tabuleiroMaterial);
+  tabuleiro.position.set(0,-0.5,0)
+  tabuleiro.rotation.x = Math.PI/2;
+  scene.add(tabuleiro);
 
   camera.position.set(0,10,28); 
 
