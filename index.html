@@ -4,8 +4,50 @@
 		<title>Snakes and Ladders</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+		<!-- Colocar a mensagem no canvas-->
+		<style>
+			#canvas-container {
+			  position: relative;
+			}
+			#diceCont {
+			  position: absolute;
+			  top: 100px;
+			  left: 100px;
+			  background-color: rgba(255, 255, 255, 0.8);
+			  padding: 20px;
+			  font-size: 20px;
+			  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			  text-align: center;
+			  border-radius: 5px;
+			}
+			#btnDado {
+			  background-color: #4CAF50; /* Green */
+			  border: none;
+			  color: white;
+			  padding: 10px 20px;
+			  text-align: center;
+			  text-decoration: none;
+			  display: inline-block;
+			  font-size: 20px;
+			  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			  border-radius: 5px;
+			  cursor: pointer;
+			}
+			#btnDado:hover {
+			  background-color: #45a049;
+			}
+		  </style>
+
 	</head>
 	<body>
+
+		<div id="diceCont">
+			<p id="tog">Vez do vermelho</p>
+			<p id="Dado">1</p>
+			<button id="btnDado">Lançar</button>
+
+		</div>
 		<script async="" src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
 
 		<script type="importmap">

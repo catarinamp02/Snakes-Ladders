@@ -14,7 +14,6 @@ function init() {
   renderer.setClearColor(0xaaaaaa);
   document.body.appendChild(renderer.domElement);
 
-  const bege = new THREE.Color(0xCCA231);
   var texturaMesa = texturaLoader.load('./Imagens/madeira.jpg');
 
  //mesa
@@ -44,7 +43,6 @@ function init() {
     scene.add(tabuleiro);
 
 
-
   //peao
   const peaoGeometria = new THREE.ConeGeometry(0.4,0.5,3);
   const peaoMaterial = new THREE.MeshBasicMaterial({color: 0xCFAA45});
@@ -66,6 +64,7 @@ function init() {
   controls.enableDamping = true; //transições mais suaves ao mexer a camara
  
   window.requestAnimationFrame(animate);
+
 }
  
 function animate() {
