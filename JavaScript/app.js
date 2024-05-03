@@ -18,7 +18,7 @@ function init() {
   var texturaMesa = texturaLoader.load('./Imagens/madeira.jpg');
 
  
-  var geometriaCubo = new THREE.BoxGeometry(20,1,20);
+  var geometriaCubo = new THREE.BoxGeometry(15,1,15);
   var materialCubo = new THREE.MeshBasicMaterial({map:texturaMesa});
   var base = new THREE.Mesh(geometriaCubo,materialCubo);
   base.position.set(0,-1,0);
@@ -40,7 +40,7 @@ function init() {
   tabuleiro.rotation.x = Math.PI/2;
   scene.add(tabuleiro);
 
-  camera.position.set(0,10,28); 
+  camera.position.set(0,4,28); 
 
   const AxesHelper = new THREE.AxesHelper(5);
   scene.add(AxesHelper);
