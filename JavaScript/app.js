@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
 
-var scene, camera, renderer, controls, texturaLoader = new THREE.TextureLoader;
+var scene, cameraP, renderer, controls, texturaLoader = new THREE.TextureLoader;
  
 function init() {
   
  
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
- 
+  cameraP = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+   
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xaaaaaa);
@@ -17,57 +17,68 @@ function init() {
   const bege = new THREE.Color(0xCCA231);
   var texturaMesa = texturaLoader.load('./Imagens/madeira.jpg');
 
- 
-  var geometriaCubo = new THREE.BoxGeometry(15,1,15);
-  var materialCubo = new THREE.MeshBasicMaterial({map:texturaMesa});
-  var base = new THREE.Mesh(geometriaCubo,materialCubo);
-  base.position.set(0,-1,0);
+ //mesa
+  var geometriaMesa = new THREE.BoxGeometry(12,0.5,12);
+  var materialMesa = new THREE.MeshBasicMaterial({map:texturaMesa});
+  var base = new THREE.Mesh(geometriaMesa,materialMesa);
+  base.position.set(0,0,0);
   scene.add(base);
 
+
+  //tabuleiro
   const texturatabuleiro = texturaLoader.load('./Imagens/base_tabuleiro.jpg');
-  const tabuleiroGeometria = new THREE.BoxGeometry(10,10,0.5);
-  const tabuleiroMaterial = [ 
-                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-                new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-                new THREE.MeshBasicMaterial({map:texturatabuleiro}),
-                            ]
-  const tabuleiro = new THREE.Mesh(tabuleiroGeometria, tabuleiroMaterial);
+  const tabuleiroGeometria = new THREE.BoxGeometry(10,0.3,10);
 
-  tabuleiro.position.set(0,-0.5,0)
-  tabuleiro.rotation.x = Math.PI/2;
-  scene.add(tabuleiro);
+    const tabuleiroMaterial = [ 
+      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+      new THREE.MeshBasicMaterial({map:texturatabuleiro}), //face de cima
+      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+     ];
 
-  camera.position.set(0,4,28); 
+    const tabuleiro = new THREE.Mesh(tabuleiroGeometria, tabuleiroMaterial);
 
-  const AxesHelper = new THREE.AxesHelper(5);
-  scene.add(AxesHelper);
+    tabuleiro.position.set(0,0.4,0);
+    scene.add(tabuleiro);
+
+
+
+  //peao
+  const peaoGeometria = new THREE.ConeGeometry(0.4,0.5,3);
+  const peaoMaterial = new THREE.MeshBasicMaterial({color: 0xCFAA45});
+  const peao= new THREE.Mesh(peaoGeometria, peaoMaterial);
+  peao.position.set(-4.5,0.7,4.5);
+  scene.add(peao);
+
+  //Cada quadrado no tabuleiro são 0.5x0.5 
+
+  cameraP.position.set(0,15,5); 
+
+  controls = new OrbitControls(cameraP, renderer.domElement);
  
-  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 0, 0); //rodar em torno deste ponto
  
-  controls.target.set(4.5, 0, 4.5);
+  controls.enablePan = false; //Para que não seja possível mexer a camara lateralmente, apenas rodar em torno do ponto definido
+  controls.maxPolarAngle = Math.PI / 2; //restricts how far the camera can tilt up or down -> Math.PI / 2 (which is 90 degrees in radians)
  
-  controls.enablePan = false;
-  controls.maxPolarAngle = Math.PI / 2;
- 
-  controls.enableDamping = true;
+  controls.enableDamping = true; //transições mais suaves ao mexer a camara
  
   window.requestAnimationFrame(animate);
 }
  
 function animate() {
   controls.update();
-  renderer.render(scene, camera);
+  renderer.render(scene, cameraP);
   window.requestAnimationFrame(animate);
 }
  
 //ajustar a janela
 function onWindowResize() {
  
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+  cameraP.aspect = window.innerWidth / window.innerHeight;
+  cameraP.updateProjectionMatrix();
  
   renderer.setSize( window.innerWidth, window.innerHeight );
  
