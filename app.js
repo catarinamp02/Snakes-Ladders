@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
 
 var scene, cameraP, renderer, controls, texturaLoader = new THREE.TextureLoader;
-var victory = false; 
 
 function init() {
 
@@ -73,23 +72,23 @@ function init() {
 
 
   //Lançar dados
-  var tog = 1;
+  var aux = 1;
 
   document.getElementById("btnDado").addEventListener("click", function () {
-      var numDado = 10 //Math.floor(Math.random() * (6 - 1 + 1) + 1);
+      var numDado = Math.floor(Math.random() * (6 - 1 + 1) + 1);
       document.getElementById("Dado").innerText = numDado;
 
-       if (tog % 2 != 0) 
+       if (aux % 2 != 0) 
       {
         document.getElementById('tog').innerText = "Vez do vermelho: ";
-        play(peao1,numDado, tog);
+        play(peao1,numDado, aux);
       } 
       else
       {
         document.getElementById('tog').innerText = "Vez do amarelo: ";
-        play(peao2,numDado, tog);
+        play(peao2,numDado, aux);
       }
-      tog = tog + 1;
+      aux = aux + 1; //Para alternar entre jogadores (também conta o número de jogadas)
       
   } );
 
@@ -99,7 +98,6 @@ function init() {
 
 }
 
-//function checkVictory()
 
 function animate() {
   controls.update();
@@ -126,9 +124,8 @@ window.onload = init;
 function play(player, numDado, numJogadas) 
 {
 
+  //Para os peões subirem para o tabuleiro na primeira jogada
   if(numJogadas < 3) {
-
-    //Colocar o peão no tabuleiro   
     player.position.y = player.position.y + 0.3;
   }
 
@@ -138,14 +135,14 @@ function play(player, numDado, numJogadas)
     player.position.z=4.5;
   }
 
-  
+  //Ciclo para os peões se deslocarem em função do valor do dado
   for(var i=0; i<numDado; i++)
   {
+
+    //Vitória 
     if (player.position.x==-4.5 && player.position.z==-4.5)
     {
-      player.position.set(-4.5, player.position.y, -4.5);
-      victory = true;
-      alert("O " + player.name + " ganhou!");
+      alert("O "+ player.name +" ganhou!!");
       location.reload();
     }
 
@@ -191,6 +188,7 @@ function play(player, numDado, numJogadas)
       player.position.x = player.position.x - 1;
     }
   }
+
 // Escadote
 if (player.position.x==-0.5 && player.position.z==4.5 )
   {
