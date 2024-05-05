@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
 
 var scene, cameraP, renderer, controls, texturaLoader = new THREE.TextureLoader;
- 
+var victory = false; 
+
 function init() {
 
   scene = new THREE.Scene();
@@ -43,19 +44,21 @@ function init() {
 
 
   //peao vermelho
-  const peaoGeometria = new THREE.ConeGeometry(0.4,0.5,3);
-  const peao1Material = new THREE.MeshBasicMaterial({color: 0xFF5733});
-  const peao1= new THREE.Mesh(peaoGeometria, peao1Material);
-  peao1.position.set(-5.5,0.7,4.5);
+  var peaoGeometria = new THREE.ConeGeometry(0.4,0.5,3);
+  var peao1Material = new THREE.MeshBasicMaterial({color: 0xFF5733});
+  var peao1= new THREE.Mesh(peaoGeometria, peao1Material);
+  peao1.position.set(-5.5,0.4,4.5);
+  peao1.name = "Vermelho";
   scene.add(peao1);
 
   //peao amarelo
-  const peao2Material = new THREE.MeshBasicMaterial({color: 0xCFAA45});
-  const peao2= new THREE.Mesh(peaoGeometria, peao2Material);
+  var peao2Material = new THREE.MeshBasicMaterial({color: 0xCFAA45});
+  var peao2= new THREE.Mesh(peaoGeometria, peao2Material);
   peao2.position.set(-5.5,0.4,5.5);
+  peao2.name = "Amarelo";
   scene.add(peao2);
 
-  //Cada quadrado no tabuleiro são 0.5x0.5 
+  //Cada quadrado no tabuleiro são 1x1 
 
   cameraP.position.set(0,15,5); 
 
@@ -70,31 +73,33 @@ function init() {
 
 
   //Lançar dados
-
   var tog = 1;
 
   document.getElementById("btnDado").addEventListener("click", function () {
-      var numDado = Math.floor(Math.random() * (6 - 1 + 1) + 1);
+      var numDado = 10 //Math.floor(Math.random() * (6 - 1 + 1) + 1);
       document.getElementById("Dado").innerText = numDado;
-  
+
        if (tog % 2 != 0) 
       {
         document.getElementById('tog').innerText = "Vez do vermelho: ";
-        play(peao1,numDado);
+        play(peao1,numDado, tog);
       } 
-      else if (tog % 2 == 0)
+      else
       {
         document.getElementById('tog').innerText = "Vez do amarelo: ";
-        play(peao2,numDado);
+        play(peao2,numDado, tog);
       }
-  
       tog = tog + 1;
-  });
+      
+  } );
+
+  
 
   window.requestAnimationFrame(animate);
 
 }
 
+//function checkVictory()
 
 function animate() {
   controls.update();
@@ -118,10 +123,14 @@ window.onload = init;
  
 //lógica do jogo
 
-function play(player, numDado) 
+function play(player, numDado, numJogadas) 
 {
-  //Colocar o peão no tabuleiro 
-  player.position.y = player.position.y + 0.3;
+
+  if(numJogadas < 3) {
+
+    //Colocar o peão no tabuleiro   
+    player.position.y = player.position.y + 0.3;
+  }
 
   //Para o peão amarelo ficar alinhado com a primeira linha do tabuliero 
   if (player.position.z == 5.5)
@@ -129,22 +138,35 @@ function play(player, numDado)
     player.position.z=4.5;
   }
 
+  
   for(var i=0; i<numDado; i++)
   {
-
-/*     //Escadote
-   if (player.position.x== -0.5 && player.position.z== 4.5 )
+    if (player.position.x==-4.5 && player.position.z==-4.5)
     {
-      player.position.set (-2.5,player.position.y,-0.5);
-    } */
-
-    //mudanças de linha
-     if(player.position.x==4.5)
-    {
-      player.position.z = player.position.z - 1;
+      player.position.set(-4.5, player.position.y, -4.5);
+      victory = true;
+      alert("O " + player.name + " ganhou!");
+      location.reload();
     }
 
-    //Sentido do movimento do peão em cada linha
+    //-----Mudanças de linha------
+
+    //Quando chega ao último quadrado da linha (sentido -> )
+   if(player.position.x==4.5)
+    {
+      player.position.z = player.position.z - 1;
+      numDado=numDado-1; //A subida também conta como um passo
+    }
+
+    //Quando chega ao último quadrado da linha (sentido <- )
+   if(player.position.x==-4.5 && (parseInt(player.position.z) % 2 != 0 || player.position.z<0 ))
+    {
+      player.position.z = player.position.z - 1;
+      numDado=numDado-1; //A subida também conta como um passo
+    }
+    
+
+    //---Sentido do movimento do peão em cada linha----
 
     //Linha cujo valor inteiro de Z é par e negativo
     if(parseInt(player.position.z) % 2 == 0 && player.position.z<0 ) 
@@ -164,12 +186,18 @@ function play(player, numDado)
     }
 
     //Linha cujo valor inteiro de Z é impar e positivo
-  else if(parseInt(player.position.z) % 2 != 0 && player.position.z>0)
+   else if(parseInt(player.position.z) % 2 != 0 && player.position.z>0)
     {
       player.position.x = player.position.x - 1;
     }
-
   }
+// Escadote
+if (player.position.x==-0.5 && player.position.z==4.5 )
+  {
+    player.position.set(-2.5,player.position.y,-0.5);
+  } 
+
+  
 
 }
 
