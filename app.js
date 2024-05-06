@@ -57,6 +57,38 @@ function init() {
   peao2.name = "Amarelo";
   scene.add(peao2);
 
+
+  var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg')
+  //Primeiro boneco-neve
+  // Esfera de topo do boneco neve
+  var bonecoNeveTopoGeometria = new THREE.SphereGeometry(0.15)
+  var bonecoNeveTopoMaterial = new THREE.MeshBasicMaterial({map:texturaNeve}) 
+  var bonecoNeveTopo = new THREE.Mesh(bonecoNeveTopoGeometria,bonecoNeveTopoMaterial);
+  bonecoNeveTopo.position.set(0,1.04,0);
+  // Esfera do meio do boneco neve
+  var bonecoNeveMeioGeometria = new THREE.SphereGeometry(0.2)
+  var bonecoNeveMeioMaterial = new THREE.MeshBasicMaterial({map:texturaNeve}) 
+  var bonecoNeveMeio = new THREE.Mesh(bonecoNeveMeioGeometria,bonecoNeveMeioMaterial);
+  bonecoNeveMeio.position.set(0,0.8,0);
+  // Esfera de base do boneco neve
+  var bonecoNeveBaseGeometria = new THREE.SphereGeometry(0.3)
+  var bonecoNeveBaseMaterial = new THREE.MeshBasicMaterial({map:texturaNeve}) 
+  var bonecoNeveBase = new THREE.Mesh(bonecoNeveBaseGeometria,bonecoNeveBaseMaterial);
+  bonecoNeveBase.position.set(0,0.5,0);
+  // x = -5.5
+  // z = 3.5
+
+  
+  var bonecoNeveOlhoEsquerdoGeometria = new THREE.SphereGeometry(0.09);
+  
+  
+  const bonecoNeve1 = new THREE.Group();
+  bonecoNeve1.add(bonecoNeveBase,bonecoNeveMeio,bonecoNeveTopo);
+  bonecoNeve1.position.set(-5.5,0,4.5);
+  scene.add(bonecoNeve1);
+
+
+
   //Cada quadrado no tabuleiro são 1x1 
 
   cameraP.position.set(0,15,5); 
@@ -139,12 +171,7 @@ function play(player, numDado, numJogadas)
   for(var i=0; i<numDado; i++)
   {
 
-    //Vitória 
-    if (player.position.x==-4.5 && player.position.z==-4.5)
-    {
-      alert("O "+ player.name +" ganhou!!");
-      location.reload();
-    }
+
 
     //-----Mudanças de linha------
 
@@ -187,13 +214,44 @@ function play(player, numDado, numJogadas)
     {
       player.position.x = player.position.x - 1;
     }
+    
+    //Vitória 
+/*     if ((player.position.x==-4.5 && player.position.z==-4.5) ||  player.position.z<-4.5)
+    {
+      player.position.set(-4.5,player.position.y,-4.5);
+      alert("O "+ player.name +" ganhou!!");
+      location.reload();
+    } */
   }
 
-// Escadote
+// Escadotes
 if (player.position.x==-0.5 && player.position.z==4.5 )
   {
     player.position.set(-2.5,player.position.y,-0.5);
   } 
+  else if (player.position.x==1.5 && player.position.z==3.5 )
+  {
+    player.position.set(3.5,player.position.y,0.5);
+  } 
+
+  else if (player.position.x==2.5 && player.position.z==-0.5 )
+  {
+    player.position.set(3.5,player.position.y,-2.5);
+  } 
+  else if (player.position.x==-1.5 && player.position.z==-1.5 )
+  {
+    player.position.set(-2.5,player.position.y,-3.5);
+  }
+
+  //Cobras 
+  else if (player.position.x==-1.5 && player.position.z==-1.5 )
+  {
+    player.position.set(-2.5,player.position.y,-3.5);
+  }
+
+
+
+
 
   
 
