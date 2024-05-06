@@ -92,9 +92,6 @@ function init() {
 
 
 
-
-  
-
   //Cada quadrado no tabuleiro são 1x1 
 
   cameraP.position.set(0,15,5); 
@@ -178,6 +175,8 @@ function play(player, numDado, numJogadas)
   {
 
     
+
+
     //-----Mudanças de linha------
     
     //Quando chega ao último quadrado da linha (sentido -> )
@@ -199,39 +198,64 @@ function play(player, numDado, numJogadas)
     
     //Linha cujo valor inteiro de Z é par e negativo
     if(parseInt(player.position.z) % 2 == 0 && player.position.z<0 ) 
-      {
-        player.position.x = player.position.x - 1;
-      }
-      //Linha cujo valor inteiro de Z é par e positivo
-      else if(parseInt(player.position.z) % 2 == 0 && player.position.z>0)
-        {
-          player.position.x = player.position.x + 1;
-        }
-        
-        //Linha cujo valor inteiro de Z é impar e negativo
-        else if(parseInt(player.position.z) % 2 != 0 && player.position.z<0 )
-          {
-            player.position.x = player.position.x + 1;
-          }
-          
-          //Linha cujo valor inteiro de Z é impar e positivo
-          else if(parseInt(player.position.z) % 2 != 0 && player.position.z>0)
-            {
-              player.position.x = player.position.x - 1;
-            }
-          }
-          
-          // Escadote
-          if (player.position.x==-0.5 && player.position.z==4.5 )
-            {
-              player.position.set(-2.5,player.position.y,-0.5);
-          //Vitória 
-          if (player.position.x==-4.5 && player.position.z==-4.5)
-          {
-            alert("O "+ player.name +" ganhou!!");
-            location.reload();
-          }
+    {
+      player.position.x = player.position.x - 1;
+    }
+    //Linha cujo valor inteiro de Z é par e positivo
+    else if(parseInt(player.position.z) % 2 == 0 && player.position.z>0)
+    {
+      player.position.x = player.position.x + 1;
+    }
+
+    //Linha cujo valor inteiro de Z é impar e negativo
+   else if(parseInt(player.position.z) % 2 != 0 && player.position.z<0 )
+    {
+      player.position.x = player.position.x + 1;
+    }
+
+    //Linha cujo valor inteiro de Z é impar e positivo
+   else if(parseInt(player.position.z) % 2 != 0 && player.position.z>0)
+    {
+      player.position.x = player.position.x - 1;
+    }
+    
+    //Vitória 
+/*     if ((player.position.x==-4.5 && player.position.z==-4.5) ||  player.position.z<-4.5)
+    {
+      player.position.set(-4.5,player.position.y,-4.5);
+      alert("O "+ player.name +" ganhou!!");
+      location.reload();
+    } */
+  }
+
+// Escadotes
+if (player.position.x==-0.5 && player.position.z==4.5 )
+  {
+    player.position.set(-2.5,player.position.y,-0.5);
   } 
+  else if (player.position.x==1.5 && player.position.z==3.5 )
+  {
+    player.position.set(3.5,player.position.y,0.5);
+  } 
+
+  else if (player.position.x==2.5 && player.position.z==-0.5 )
+  {
+    player.position.set(3.5,player.position.y,-2.5);
+  } 
+  else if (player.position.x==-1.5 && player.position.z==-1.5 )
+  {
+    player.position.set(-2.5,player.position.y,-3.5);
+  }
+
+  //Cobras 
+  else if (player.position.x==-1.5 && player.position.z==-1.5 )
+  {
+    player.position.set(-2.5,player.position.y,-3.5);
+  }
+
+
+
+
 
   
   
