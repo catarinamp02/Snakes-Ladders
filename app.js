@@ -72,23 +72,23 @@ function init() {
 
 
   //Lançar dados
-  var aux = 1;
+  var numJogadas = 1;
 
   document.getElementById("btnDado").addEventListener("click", function () {
       var numDado = Math.floor(Math.random() * (6 - 1 + 1) + 1);
       document.getElementById("Dado").innerText = numDado;
 
-       if (aux % 2 != 0) 
+       if (numJogadas % 2 != 0) 
       {
-        document.getElementById('tog').innerText = "Vez do vermelho: ";
-        play(peao1,numDado, aux);
+        document.getElementById('numJogadas').innerText = "Vez do vermelho: ";
+        play(peao1,numDado, numJogadas);
       } 
       else
       {
-        document.getElementById('tog').innerText = "Vez do amarelo: ";
-        play(peao2,numDado, aux);
+        document.getElementById('numJogadas').innerText = "Vez do amarelo: ";
+        play(peao2,numDado, numJogadas);
       }
-      aux = aux + 1; //Para alternar entre jogadores (também conta o número de jogadas)
+      numJogadas = numJogadas + 1; //Para alternar entre jogadores
       
   } );
 
