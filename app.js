@@ -111,7 +111,7 @@ function init() {
 
   // TODO: Ajustar posicionamento destas esferas para formar um sorriso e botões no peito do boneco
   pequenaEsferaNegra1.position.set(-0.069,1.03,0.14)
-  // pequenaEsferaNegra2.position.set(-0.053,1.03,0.14)
+  pequenaEsferaNegra2.position.set(-0.053,1.02,0.18)
   // pequenaEsferaNegra3.position.set(-0.053,1.03,0.14)
   // pequenaEsferaNegra4.position.set(-0.053,1.03,0.14)
   // pequenaEsferaNegra5.position.set(-0.053,1.03,0.14)
