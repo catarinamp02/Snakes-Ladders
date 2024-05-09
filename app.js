@@ -51,7 +51,7 @@ function init() {
   var peao1= new THREE.Mesh(peaoGeometria, peao1Material);
   peao1.position.set(-5.5,0.4,4.5);
   peao1.name = "Vermelho";
-  scene.add(peao1);
+  // scene.add(peao1);
 
   //peao amarelo
   var peao2Material = new THREE.MeshBasicMaterial({color: 0xCFAA45});
@@ -62,6 +62,7 @@ function init() {
 
 
   var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg')
+  var texturaCenoura = texturaLoader.load('./Imagens/cenoura.jpg');
   //Primeiro boneco-neve
   // Esfera de topo do boneco neve
   var bonecoNeveTopoGeometria = new THREE.SphereGeometry(0.15)
@@ -82,13 +83,61 @@ function init() {
   // z = 3.5
 
   
-  var bonecoNeveOlhoEsquerdoGeometria = new THREE.SphereGeometry(0.09);
+  var bonecoNeveOlhoGeometria = new THREE.SphereGeometry(0.022);
+  var bonecoNeveOlhoMaterial = new THREE.MeshBasicMaterial({color:'black'})
+  var bonecoNeveOlhoEsquerdo = new THREE.Mesh(bonecoNeveOlhoGeometria,bonecoNeveOlhoMaterial);
+  var bonecoNeveOlhoDireito = new THREE.Mesh(bonecoNeveOlhoGeometria,bonecoNeveOlhoMaterial);
+
+  bonecoNeveOlhoEsquerdo.position.set(0.06,1.09,0.13)
+  bonecoNeveOlhoDireito.position.set(-0.06,1.09,0.13)
   
+  var bonecoNeveNarizGeometria = new THREE.ConeGeometry(0.018,.1,64);
+  var bonecoNeveNarizMaterial = new THREE.MeshBasicMaterial({map:texturaCenoura})
+  var bonecoNeveNariz = new THREE.Mesh(bonecoNeveNarizGeometria,bonecoNeveNarizMaterial);
+  bonecoNeveNariz.position.set(0,1.068,0.2)
+  bonecoNeveNariz.rotateX(Math.PI/2);
+
+  var pequenaEsferaNegraGeometria = new THREE.SphereGeometry(0.011);
+  var pequenaEsferaNegraMaterial = new THREE.MeshBasicMaterial({color:'black'})
+  var pequenaEsferaNegra1 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
+  var pequenaEsferaNegra2 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
+  var pequenaEsferaNegra3 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
+  var pequenaEsferaNegra4 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
+  var pequenaEsferaNegra5 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
+  var pequenaEsferaNegra6 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
+  var pequenaEsferaNegra7 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
+  var pequenaEsferaNegra8 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
   
-  const bonecoNeve1 = new THREE.Group();
-  bonecoNeve1.add(bonecoNeveBase,bonecoNeveMeio,bonecoNeveTopo);
-  bonecoNeve1.position.set(-5.5,0,4.5);
-  scene.add(bonecoNeve1);
+
+  // TODO: Ajustar posicionamento destas esferas para formar um sorriso e botões no peito do boneco
+  pequenaEsferaNegra1.position.set(-0.069,1.03,0.14)
+  // pequenaEsferaNegra2.position.set(-0.053,1.03,0.14)
+  // pequenaEsferaNegra3.position.set(-0.053,1.03,0.14)
+  // pequenaEsferaNegra4.position.set(-0.053,1.03,0.14)
+  // pequenaEsferaNegra5.position.set(-0.053,1.03,0.14)
+  // pequenaEsferaNegra6.position.set(-0.053,1.03,0.14)
+  // pequenaEsferaNegra7.position.set(-0.053,1.03,0.14)
+  // pequenaEsferaNegra8.position.set(-0.053,1.03,0.14)
+
+  const bonecoNeve = new THREE.Group();
+  bonecoNeve.add(
+      bonecoNeveBase,
+      bonecoNeveMeio,
+      bonecoNeveTopo,
+      bonecoNeveOlhoEsquerdo, 
+      bonecoNeveOlhoDireito, 
+      bonecoNeveNariz,
+      pequenaEsferaNegra1,
+      pequenaEsferaNegra2,
+      pequenaEsferaNegra3,
+      pequenaEsferaNegra4,
+      pequenaEsferaNegra5,
+      pequenaEsferaNegra6,
+      pequenaEsferaNegra7,
+      pequenaEsferaNegra8);
+  bonecoNeve.position.set(-5.5,0,4.5);
+  bonecoNeve.name = "Jogador 1"
+  scene.add(bonecoNeve);
 
 
 
@@ -116,7 +165,7 @@ function init() {
        if (numJogadas % 2 != 0) 
       {
         document.getElementById('numJogadas').innerText = "Vez do vermelho: ";
-        play(bonecoNeve1,numDado, numJogadas);
+        play(bonecoNeve,numDado, numJogadas);
       } 
       else
       {
@@ -220,12 +269,11 @@ function play(player, numDado, numJogadas)
     }
     
     //Vitória 
-/*     if ((player.position.x==-4.5 && player.position.z==-4.5) ||  player.position.z<-4.5)
+    if ((player.position.x==-4.5 && player.position.z==-4.5) ||  player.position.z<-4.5)
     {
       player.position.set(-4.5,player.position.y,-4.5);
-      alert("O "+ player.name +" ganhou!!");
-      location.reload();
-    } */
+      setTimeout(() => alert("O "+ player.name +" ganhou!!"), 20)
+    } 
   }
 
 // Escadotes
