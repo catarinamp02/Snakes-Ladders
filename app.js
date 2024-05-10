@@ -215,10 +215,11 @@ function play(player, numDado, numJogadas)
   for(var i=0; i<numDado; i++)
   {
     if(player.position.z <-4.5)
-      {
-        player.position.set(-4.5,player.position.y,-4.5);
-        break;
-      }
+    {
+      player.position.set(-4.5,player.position.y,-4.5);
+      break;
+    }
+  
     //-----Mudanças de linha------
     
     //Quando chega ao último quadrado da linha (sentido -> )
@@ -267,7 +268,14 @@ function play(player, numDado, numJogadas)
   if (player.position.x==-4.5 && player.position.z==-4.5)
   {
     
-    setTimeout(() => alert("O "+ player.name +" ganhou!!"), 20)
+    //setTimeout(() => alert("O "+ player.name +" ganhou!!"), 20)
+
+    setTimeout(() => {
+      alert("O " + player.name + " ganhou!!");
+      window.location.reload();
+    }, 20);
+  
+
   }
 
 // Escadotes
