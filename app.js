@@ -45,19 +45,11 @@ function init() {
     scene.add(tabuleiro);
 
 
-  //peao vermelho
-  var peaoGeometria = new THREE.ConeGeometry(0.4,0.5,3);
-  var peao1Material = new THREE.MeshBasicMaterial({color: 0xFF5733});
-  var peao1= new THREE.Mesh(peaoGeometria, peao1Material);
-  peao1.position.set(-5.5,0.4,4.5);
-  peao1.name = "Vermelho";
-  // scene.add(peao1);
-
   //peao amarelo
   var peao2Material = new THREE.MeshBasicMaterial({color: 0xCFAA45});
   var peao2= new THREE.Mesh(peaoGeometria, peao2Material);
   peao2.position.set(-5.5,0.4,5.5);
-  peao2.name = "Amarelo";
+  peao2.name = "Jogador 2";
   scene.add(peao2);
 
 
@@ -139,10 +131,6 @@ function init() {
   bonecoNeve.name = "Jogador 1"
   scene.add(bonecoNeve);
 
-
-
-  //Cada quadrado no tabuleiro são 1x1 
-
   cameraP.position.set(0,15,5); 
 
   controls = new OrbitControls(cameraP, renderer.domElement);
@@ -164,12 +152,12 @@ function init() {
 
        if (numJogadas % 2 != 0) 
       {
-        document.getElementById('numJogadas').innerText = "Vez do vermelho: ";
+        document.getElementById('numJogadas').innerText = "Vez jogador 1: ";
         play(bonecoNeve,numDado, numJogadas);
       } 
       else
       {
-        document.getElementById('numJogadas').innerText = "Vez do amarelo: ";
+        document.getElementById('numJogadas').innerText = "Vez do jogador 2: ";
         play(peao2,numDado, numJogadas);
       }
       numJogadas = numJogadas + 1; //Para alternar entre jogadores
@@ -208,6 +196,8 @@ window.onload = init;
 function play(player, numDado, numJogadas) 
 {
 
+  //Cada quadrado no tabuleiro é 1x1 
+
   //Para os peões subirem para o tabuleiro na primeira jogada
   if(numJogadas < 3) {
     player.position.y = player.position.y + 0.3;
@@ -222,9 +212,6 @@ function play(player, numDado, numJogadas)
   //Ciclo para os peões se deslocarem em função do valor do dado
   for(var i=0; i<numDado; i++)
   {
-
-    
-
 
     //-----Mudanças de linha------
     
@@ -296,17 +283,32 @@ if (player.position.x==-0.5 && player.position.z==4.5 )
   }
 
   //Cobras 
-  else if (player.position.x==-1.5 && player.position.z==-1.5 )
+  else if (player.position.x==-2.5 && player.position.z==1.5 )
   {
-    player.position.set(-2.5,player.position.y,-3.5);
+    player.position.set(-4.5,player.position.y,3.5);
+  }
+
+  else if (player.position.x==4.5 && player.position.z==-0.5 )
+  {
+    player.position.set(4.5,player.position.y,4.5);
+  }
+
+  else if (player.position.x==-0.5 && player.position.z==-2.5 )
+  {
+    player.position.set(1.5,player.position.y,-0.5);
+  }
+
+  else if (player.position.x==4.5 && player.position.z==-4.5 )
+  {
+    player.position.set(2.5,player.position.y,-2.5);
+  }
+
+  else if (player.position.x==-1.5 && player.position.z==-4.5 )
+  {
+    player.position.set(-4.5,player.position.y,-1.5);
   }
 
 
-
-
-
-  
-  
 }
 
 
