@@ -46,6 +46,7 @@ function init() {
 
 
   //peao amarelo
+  var peaoGeometria = new THREE.ConeGeometry(0.5,1,10);
   var peao2Material = new THREE.MeshBasicMaterial({color: 0xCFAA45});
   var peao2= new THREE.Mesh(peaoGeometria, peao2Material);
   peao2.position.set(-5.5,0.4,5.5);
@@ -128,7 +129,7 @@ function init() {
       pequenaEsferaNegra7,
       pequenaEsferaNegra8);
   bonecoNeve.position.set(-5.5,0,4.5);
-  bonecoNeve.name = "Jogador 1"
+  bonecoNeve.name = "Boneco de neve"
   scene.add(bonecoNeve);
 
   cameraP.position.set(0,15,5); 
@@ -152,12 +153,12 @@ function init() {
 
        if (numJogadas % 2 != 0) 
       {
-        document.getElementById('numJogadas').innerText = "Vez jogador 1: ";
+        document.getElementById('numJogadas').innerText = "Vez do "+ bonecoNeve.name + ": ";
         play(bonecoNeve,numDado, numJogadas);
       } 
       else
       {
-        document.getElementById('numJogadas').innerText = "Vez do jogador 2: ";
+        document.getElementById('numJogadas').innerText = "Vez do "+ peao2.name + ": ";
         play(peao2,numDado, numJogadas);
       }
       numJogadas = numJogadas + 1; //Para alternar entre jogadores
@@ -209,10 +210,15 @@ function play(player, numDado, numJogadas)
     player.position.z=4.5;
   }
 
+
   //Ciclo para os peões se deslocarem em função do valor do dado
   for(var i=0; i<numDado; i++)
   {
-
+    if(player.position.z <-4.5)
+      {
+        player.position.set(-4.5,player.position.y,-4.5);
+        break;
+      }
     //-----Mudanças de linha------
     
     //Quando chega ao último quadrado da linha (sentido -> )
@@ -254,13 +260,14 @@ function play(player, numDado, numJogadas)
     {
       player.position.x = player.position.x - 1;
     }
+     
+  }
+
+  //Vitória 
+  if (player.position.x==-4.5 && player.position.z==-4.5)
+  {
     
-    //Vitória 
-    if ((player.position.x==-4.5 && player.position.z==-4.5) ||  player.position.z<-4.5)
-    {
-      player.position.set(-4.5,player.position.y,-4.5);
-      setTimeout(() => alert("O "+ player.name +" ganhou!!"), 20)
-    } 
+    setTimeout(() => alert("O "+ player.name +" ganhou!!"), 20)
   }
 
 // Escadotes
