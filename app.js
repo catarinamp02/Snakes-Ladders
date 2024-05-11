@@ -130,7 +130,7 @@ function init() {
       pequenaEsferaNegra7,
       pequenaEsferaNegra8);
   bonecoNeve.position.set(-5.5,0,4.5);
-  bonecoNeve.name = "Boneco de neve"
+  bonecoNeve.name = "Boneco de neve";
   scene.add(bonecoNeve);
 
   cameraP.position.set(0,15,5); 
