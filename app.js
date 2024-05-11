@@ -296,48 +296,48 @@ function play(player1, player2, numDado, numJogadas)
   }
 
 // Escadotes
-if (player.position.x==-0.5 && player.position.z==4.5 )
+if (player1.position.x==-0.5 && player1.position.z==4.5 )
   {
-    player.position.set(-2.5,player.position.y,-0.5);
+    player1.position.set(-2.5,player1.position.y,-0.5);
   } 
-  else if (player.position.x==1.5 && player.position.z==3.5 )
+  else if (player1.position.x==1.5 && player1.position.z==3.5 )
   {
-    player.position.set(3.5,player.position.y,0.5);
+    player1.position.set(3.5,player1.position.y,0.5);
   } 
 
-  else if (player.position.x==2.5 && player.position.z==-0.5 )
+  else if (player1.position.x==2.5 && player1.position.z==-0.5 )
   {
-    player.position.set(3.5,player.position.y,-2.5);
+    player1.position.set(3.5,player1.position.y,-2.5);
   } 
-  else if (player.position.x==-1.5 && player.position.z==-1.5 )
+  else if (player1.position.x==-1.5 && player1.position.z==-1.5 )
   {
-    player.position.set(-2.5,player.position.y,-3.5);
+    player1.position.set(-2.5,player1.position.y,-3.5);
   }
 
   //Cobras 
-  else if (player.position.x==-2.5 && player.position.z==1.5 )
+  else if (player1.position.x==-2.5 && player1.position.z==1.5 )
   {
-    player.position.set(-4.5,player.position.y,3.5);
+    player1.position.set(-4.5,player1.position.y,3.5);
   }
 
-  else if (player.position.x==4.5 && player.position.z==-0.5 )
+  else if (player1.position.x==4.5 && player1.position.z==-0.5 )
   {
-    player.position.set(4.5,player.position.y,4.5);
+    player1.position.set(4.5,player1.position.y,4.5);
   }
 
-  else if (player.position.x==-0.5 && player.position.z==-2.5 )
+  else if (player1.position.x==-0.5 && player1.position.z==-2.5 )
   {
-    player.position.set(1.5,player.position.y,-0.5);
+    player1.position.set(1.5,player1.position.y,-0.5);
   }
 
-  else if (player.position.x==4.5 && player.position.z==-4.5 )
+  else if (player1.position.x==4.5 && player1.position.z==-4.5 )
   {
-    player.position.set(2.5,player.position.y,-2.5);
+    player1.position.set(2.5,player1.position.y,-2.5);
   }
 
-  else if (player.position.x==-1.5 && player.position.z==-4.5 )
+  else if (player1.position.x==-1.5 && player1.position.z==-4.5 )
   {
-    player.position.set(-4.5,player.position.y,-1.5);
+    player1.position.set(-4.5,player1.position.y,-1.5);
   }
 
 
