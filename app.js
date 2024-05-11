@@ -142,8 +142,8 @@ function init() {
   controls.enablePan = false; //Para que não seja possível mexer a camara lateralmente, apenas rodar em torno do ponto definido
   controls.maxPolarAngle = Math.PI / 2; //restricts how far the camera can tilt up or down -> Math.PI / 2 (which is 90 degrees in radians)
  
-  controls.enableDamping = true; //transições mais suaves ao mexer a camara
-
+  controls.enableDamping = true; //transições mais suaves ao mexer a camara 
+ 
 
   //Lançar dados
   var numJogadas = 1;
