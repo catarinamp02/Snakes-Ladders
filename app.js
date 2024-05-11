@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
 
 var scene, cameraP, renderer, controls, texturaLoader = new THREE.TextureLoader;
+var sobreposicao = false;
 
 function init() {
 
@@ -152,17 +153,26 @@ function init() {
       document.getElementById("Dado").innerText = numDado;
 
        if (numJogadas % 2 != 0) 
-      {
+      { 
         document.getElementById('numJogadas').innerText = "Vez do "+ bonecoNeve.name + ": ";
-        play(bonecoNeve,numDado, numJogadas);
+        play(bonecoNeve, peao2, numDado, numJogadas);
       } 
       else
-      {
+      { 
         document.getElementById('numJogadas').innerText = "Vez do "+ peao2.name + ": ";
-        play(peao2,numDado, numJogadas);
+        play(peao2, bonecoNeve, numDado, numJogadas);
+
+        //Sobreposição 
+        if (peao2.position.x == bonecoNeve.position.x && peao2.position.z == bonecoNeve.position.z)
+        {
+          bonecoNeve.position.x -= 0.3;
+          peao2.position.x += 0.3;
+          sobreposicao = true;
+        }
+        
       }
       numJogadas = numJogadas + 1; //Para alternar entre jogadores
-      
+
   } );
 
   
@@ -170,7 +180,6 @@ function init() {
   window.requestAnimationFrame(animate);
 
 }
-
 
 function animate() {
   controls.update();
@@ -194,45 +203,54 @@ window.onload = init;
  
 //lógica do jogo
 
-function play(player, numDado, numJogadas) 
+function play(player1, player2, numDado, numJogadas) 
 {
 
   //Cada quadrado no tabuleiro é 1x1 
 
   //Para os peões subirem para o tabuleiro na primeira jogada
   if(numJogadas < 3) {
-    player.position.y = player.position.y + 0.3;
+    player1.position.y = player1.position.y + 0.3;
   }
 
   //Para o peão amarelo ficar alinhado com a primeira linha do tabuliero 
-  if (player.position.z == 5.5)
+  if (player1.position.z == 5.5)
   {
-    player.position.z=4.5;
+    player1.position.z=4.5;
   }
 
 
   //Ciclo para os peões se deslocarem em função do valor do dado
   for(var i=0; i<numDado; i++)
   {
-    if(player.position.z <-4.5)
+
+    //Restabelecer após sobreposição
+    if (sobreposicao == true)
     {
-      player.position.set(-4.5,player.position.y,-4.5);
+      player1.position.x = player1.position.x + 0.3;
+      player2.position.x = player2.position.x - 0.3;
+      sobreposicao = false;
+    }
+
+    if(player1.position.z <-4.5)
+    {
+      player1.position.set(-4.5,player1.position.y,-4.5);
       break;
     }
   
     //-----Mudanças de linha------
     
     //Quando chega ao último quadrado da linha (sentido -> )
-    if(player.position.x==4.5)
-      {
-        player.position.z = player.position.z - 1;
-        numDado=numDado-1; //A subida também conta como um passo
-      }
+    if(player1.position.x==4.5)
+    {
+      player1.position.z = player1.position.z - 1;
+      numDado=numDado-1; //A subida também conta como um passo
+    }
       
-      //Quando chega ao último quadrado da linha (sentido <- )
-      if(player.position.x==-4.5 && (parseInt(player.position.z) % 2 != 0 || player.position.z<0 ))
-        {
-          player.position.z = player.position.z - 1;
+    //Quando chega ao último quadrado da linha (sentido <- )
+    if(player1.position.x==-4.5 && (parseInt(player1.position.z) % 2 != 0 || player1.position.z<0 ))
+    {
+      player1.position.z = player1.position.z - 1;
       numDado=numDado-1; //A subida também conta como um passo
     }
     
@@ -240,38 +258,37 @@ function play(player, numDado, numJogadas)
     //---Sentido do movimento do peão em cada linha----
     
     //Linha cujo valor inteiro de Z é par e negativo
-    if(parseInt(player.position.z) % 2 == 0 && player.position.z<0 ) 
+    if(parseInt(player1.position.z) % 2 == 0 && player1.position.z<0 ) 
     {
-      player.position.x = player.position.x - 1;
+      player1.position.x = player1.position.x - 1;
     }
     //Linha cujo valor inteiro de Z é par e positivo
-    else if(parseInt(player.position.z) % 2 == 0 && player.position.z>0)
+    else if(parseInt(player1.position.z) % 2 == 0 && player1.position.z>0)
     {
-      player.position.x = player.position.x + 1;
+      player1.position.x = player1.position.x + 1;
     }
 
     //Linha cujo valor inteiro de Z é impar e negativo
-   else if(parseInt(player.position.z) % 2 != 0 && player.position.z<0 )
+   else if(parseInt(player1.position.z) % 2 != 0 && player1.position.z<0 )
     {
-      player.position.x = player.position.x + 1;
+      player1.position.x = player1.position.x + 1;
     }
 
     //Linha cujo valor inteiro de Z é impar e positivo
-   else if(parseInt(player.position.z) % 2 != 0 && player.position.z>0)
+   else if(parseInt(player1.position.z) % 2 != 0 && player1.position.z>0)
     {
-      player.position.x = player.position.x - 1;
+      player1.position.x = player1.position.x - 1;
     }
-     
+
   }
 
+
   //Vitória 
-  if (player.position.x==-4.5 && player.position.z==-4.5)
+  if (player1.position.x==-4.5 && player1.position.z==-4.5)
   {
     
-    //setTimeout(() => alert("O "+ player.name +" ganhou!!"), 20)
-
-    setTimeout(() => {
-      alert("O " + player.name + " ganhou!!");
+   setTimeout(() => {
+      alert("O " + player1.name + " ganhou!!");
       window.location.reload();
     }, 20);
   
