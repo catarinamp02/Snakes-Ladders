@@ -103,7 +103,7 @@ function init() {
   var pequenaEsferaNegra8 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
   
 
-  // TODO: Ajustar posicionamento destas esferas para formar um sorriso e botões no peito do boneco
+  // TODO: Ajustar posicionamento destas esferas para formar um sorriso e botões no peito do boneco 
   pequenaEsferaNegra1.position.set(-0.069,1.03,0.14)
   pequenaEsferaNegra2.position.set(-0.053,1.02,0.18)
   // pequenaEsferaNegra3.position.set(-0.053,1.03,0.14)
