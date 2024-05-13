@@ -8,7 +8,10 @@ function init() {
 
   scene = new THREE.Scene();
   cameraP = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-   
+  
+  
+
+  // scene.background= texturaLoader.load('./Imagens/snakesnladders.png'); // TODO: background da cena
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xaaaaaa);
@@ -101,17 +104,30 @@ function init() {
   var pequenaEsferaNegra6 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
   var pequenaEsferaNegra7 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
   var pequenaEsferaNegra8 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
-  
 
-  // TODO: Ajustar posicionamento destas esferas para formar um sorriso e botões no peito do boneco
-  pequenaEsferaNegra1.position.set(-0.069,1.03,0.14)
-  pequenaEsferaNegra2.position.set(-0.053,1.02,0.18)
-  // pequenaEsferaNegra3.position.set(-0.053,1.03,0.14)
-  // pequenaEsferaNegra4.position.set(-0.053,1.03,0.14)
-  // pequenaEsferaNegra5.position.set(-0.053,1.03,0.14)
-  // pequenaEsferaNegra6.position.set(-0.053,1.03,0.14)
-  // pequenaEsferaNegra7.position.set(-0.053,1.03,0.14)
-  // pequenaEsferaNegra8.position.set(-0.053,1.03,0.14)
+  // TODO: Acertar geometria dos braços
+  var bonecoNeveBracoGeometria = new THREE.CylinderGeometry(0.03,0.05,0.5,64);
+  var bonecoNeveBracoMaterial = new THREE.MeshBasicMaterial({color: 0xC4A484})
+  var bonecoNeveBracoEsquerdo = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
+  var bonecoNeveBracoDireito = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
+  
+  
+  
+  // Posicionamento das esferas que formam o sorriso e os botões do boneco de neve
+  pequenaEsferaNegra1.position.set(-0.061,1.02,0.14)
+  pequenaEsferaNegra2.position.set(-0.042,1.0,0.15)
+  pequenaEsferaNegra3.position.set(0,0.98,0.145)
+  pequenaEsferaNegra4.position.set(0.042,1.0,0.145)
+  pequenaEsferaNegra5.position.set(0.061,1.02,0.14)
+  pequenaEsferaNegra6.position.set(0,0.8,0.21)
+  pequenaEsferaNegra7.position.set(0,0.7,0.23)
+  pequenaEsferaNegra8.position.set(0,0.6,0.29)
+
+  //TODO: Posicionamento dos braços do boneco de neve 
+  bonecoNeveBracoEsquerdo.position.set(-2.5,0,0)
+  bonecoNeveBracoDireito.position.set(2.5,0,0)
+
+
 
   const bonecoNeve = new THREE.Group();
   bonecoNeve.add(
@@ -128,7 +144,9 @@ function init() {
       pequenaEsferaNegra5,
       pequenaEsferaNegra6,
       pequenaEsferaNegra7,
-      pequenaEsferaNegra8);
+      pequenaEsferaNegra8,
+      bonecoNeveBracoEsquerdo,
+      bonecoNeveBracoDireito);
   bonecoNeve.position.set(-5.5,0,4.5);
   bonecoNeve.name = "Boneco de neve"
   scene.add(bonecoNeve);
@@ -285,14 +303,11 @@ function play(player1, player2, numDado, numJogadas)
 
   //Vitória 
   if (player1.position.x==-4.5 && player1.position.z==-4.5)
-  {
-    
+  {   
    setTimeout(() => {
       alert("O " + player1.name + " ganhou!!");
       window.location.reload();
     }, 20);
-  
-
   }
 
 // Escadotes
