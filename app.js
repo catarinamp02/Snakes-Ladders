@@ -1,17 +1,23 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
 
-var scene, cameraP, renderer, controls, texturaLoader = new THREE.TextureLoader;
+var scene, cameraP,cameraO, renderer, controls, texturaLoader = new THREE.TextureLoader;
 var sobreposicao = false;
+var activeCamera;
 
 function init() {
 
   scene = new THREE.Scene();
-  cameraP = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  
-  
 
-  // scene.background= texturaLoader.load('./Imagens/snakesnladders.png'); // TODO: background da cena
+  //----Camaras-----
+  //Camara perspetiva
+  cameraP = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  cameraP.position.set(0,15,5); 
+
+  //Camara Ortográfica 
+  cameraO = new THREE.OrthographicCamera(window.innerWidth / - 100, window.innerWidth / 100, window.innerHeight / 100, window.innerHeight / - 100, 1, 1000);
+  cameraO.position.set(0,10,0); 
+  cameraO.lookAt(0,0,0);
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xaaaaaa);
@@ -58,22 +64,22 @@ function init() {
   scene.add(peao2);
 
 
-  var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg')
+  var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg');
   var texturaCenoura = texturaLoader.load('./Imagens/cenoura.jpg');
   //Primeiro boneco-neve
   // Esfera de topo do boneco neve
-  var bonecoNeveTopoGeometria = new THREE.SphereGeometry(0.15)
-  var bonecoNeveTopoMaterial = new THREE.MeshBasicMaterial({map:texturaNeve}) 
+  var bonecoNeveTopoGeometria = new THREE.SphereGeometry(0.15);
+  var bonecoNeveTopoMaterial = new THREE.MeshBasicMaterial({map:texturaNeve});
   var bonecoNeveTopo = new THREE.Mesh(bonecoNeveTopoGeometria,bonecoNeveTopoMaterial);
   bonecoNeveTopo.position.set(0,1.04,0);
   // Esfera do meio do boneco neve
-  var bonecoNeveMeioGeometria = new THREE.SphereGeometry(0.2)
-  var bonecoNeveMeioMaterial = new THREE.MeshBasicMaterial({map:texturaNeve}) 
+  var bonecoNeveMeioGeometria = new THREE.SphereGeometry(0.2);
+  var bonecoNeveMeioMaterial = new THREE.MeshBasicMaterial({map:texturaNeve});
   var bonecoNeveMeio = new THREE.Mesh(bonecoNeveMeioGeometria,bonecoNeveMeioMaterial);
   bonecoNeveMeio.position.set(0,0.8,0);
   // Esfera de base do boneco neve
-  var bonecoNeveBaseGeometria = new THREE.SphereGeometry(0.3)
-  var bonecoNeveBaseMaterial = new THREE.MeshBasicMaterial({map:texturaNeve}) 
+  var bonecoNeveBaseGeometria = new THREE.SphereGeometry(0.3);
+  var bonecoNeveBaseMaterial = new THREE.MeshBasicMaterial({map:texturaNeve});
   var bonecoNeveBase = new THREE.Mesh(bonecoNeveBaseGeometria,bonecoNeveBaseMaterial);
   bonecoNeveBase.position.set(0,0.5,0);
   // x = -5.5
@@ -81,17 +87,17 @@ function init() {
 
   
   var bonecoNeveOlhoGeometria = new THREE.SphereGeometry(0.022);
-  var bonecoNeveOlhoMaterial = new THREE.MeshBasicMaterial({color:'black'})
+  var bonecoNeveOlhoMaterial = new THREE.MeshBasicMaterial({color:'black'});
   var bonecoNeveOlhoEsquerdo = new THREE.Mesh(bonecoNeveOlhoGeometria,bonecoNeveOlhoMaterial);
   var bonecoNeveOlhoDireito = new THREE.Mesh(bonecoNeveOlhoGeometria,bonecoNeveOlhoMaterial);
 
-  bonecoNeveOlhoEsquerdo.position.set(0.06,1.09,0.13)
-  bonecoNeveOlhoDireito.position.set(-0.06,1.09,0.13)
+  bonecoNeveOlhoEsquerdo.position.set(0.06,1.09,0.13);
+  bonecoNeveOlhoDireito.position.set(-0.06,1.09,0.13);
   
   var bonecoNeveNarizGeometria = new THREE.ConeGeometry(0.018,.1,64);
-  var bonecoNeveNarizMaterial = new THREE.MeshBasicMaterial({map:texturaCenoura})
+  var bonecoNeveNarizMaterial = new THREE.MeshBasicMaterial({map:texturaCenoura});
   var bonecoNeveNariz = new THREE.Mesh(bonecoNeveNarizGeometria,bonecoNeveNarizMaterial);
-  bonecoNeveNariz.position.set(0,1.068,0.2)
+  bonecoNeveNariz.position.set(0,1.068,0.2);
   bonecoNeveNariz.rotateX(Math.PI/2);
 
   var pequenaEsferaNegraGeometria = new THREE.SphereGeometry(0.011);
@@ -129,6 +135,7 @@ function init() {
 
 
 
+
   const bonecoNeve = new THREE.Group();
   bonecoNeve.add(
       bonecoNeveBase,
@@ -148,20 +155,20 @@ function init() {
       bonecoNeveBracoEsquerdo,
       bonecoNeveBracoDireito);
   bonecoNeve.position.set(-5.5,0,4.5);
-  bonecoNeve.name = "Boneco de neve"
+  bonecoNeve.name = "Boneco de neve";
   scene.add(bonecoNeve);
 
-  cameraP.position.set(0,15,5); 
-
-  controls = new OrbitControls(cameraP, renderer.domElement);
+  activeCamera = cameraP;
+  controls = new OrbitControls(activeCamera, renderer.domElement);
  
   controls.target.set(0, 0, 0); //rodar em torno deste ponto
  
   controls.enablePan = false; //Para que não seja possível mexer a camara lateralmente, apenas rodar em torno do ponto definido
   controls.maxPolarAngle = Math.PI / 2; //restricts how far the camera can tilt up or down -> Math.PI / 2 (which is 90 degrees in radians)
  
-  controls.enableDamping = true; //transições mais suaves ao mexer a camara
+  controls.enableDamping = true; //transições mais suaves ao mexer a camara 
 
+  document.addEventListener("keydown", onDocumentKeyDown, false);
 
   //Lançar dados
   var numJogadas = 1;
@@ -193,31 +200,63 @@ function init() {
 
   } );
 
-  
+  //Botão atalhos
+  var coll = document.getElementById("collapsible-btn");
+  var content = document.getElementById("content");
+
+  coll.addEventListener("click", function() {
+    this.classList.toggle("active");
+    if (content.style.display === "block") { //Verificar o estilo atual do elemento content. Se estiver visível (block) passa invisível (none) ao carregar no botão 
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
 
   window.requestAnimationFrame(animate);
 
+
+
+}
+
+//Função para controlo pelo teclado
+function onDocumentKeyDown (event)
+{
+  var keyCode=event.which;
+
+  if(keyCode == 84 && activeCamera==cameraP) //tecla t ativa a camara ortografica
+  {
+    activeCamera=cameraO;
+  }
+  else if(keyCode == 84 && activeCamera==cameraO) //carregar de novo na tecla t para desativar a camara ortográfoca
+  { 
+    activeCamera = cameraP;
+  }
 }
 
 function animate() {
   controls.update();
-  renderer.render(scene, cameraP);
+  renderer.render(scene, activeCamera);
   window.requestAnimationFrame(animate);
 }
  
 //ajustar a janela
 function onWindowResize() {
  
-  cameraP.aspect = window.innerWidth / window.innerHeight;
-  cameraP.updateProjectionMatrix();
+  activeCamera.aspect = window.innerWidth / window.innerHeight;
+  activeCamera.updateProjectionMatrix();
  
   renderer.setSize( window.innerWidth, window.innerHeight );
  
 }
+
+
+
  
 window.addEventListener('resize', onWindowResize);
 
 window.onload = init;
+
  
 //lógica do jogo
 
