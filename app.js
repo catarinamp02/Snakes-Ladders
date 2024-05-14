@@ -15,7 +15,7 @@ function init() {
   cameraP.position.set(0,15,5); 
 
   //Camara Ortográfica 
-  cameraO = new THREE.OrthographicCamera(-20,20,10,-10,-10,10);
+  cameraO = new THREE.OrthographicCamera(window.innerWidth / - 100, window.innerWidth / 100, window.innerHeight / 100, window.innerHeight / - 100, 1, 1000);
   cameraO.position.set(0,10,0); 
   cameraO.lookAt(0,0,0);
   
@@ -186,7 +186,18 @@ function init() {
 
   } );
 
-  
+  //Botão atalhos
+  var coll = document.getElementById("collapsible-btn");
+  var content = document.getElementById("content");
+
+  coll.addEventListener("click", function() {
+    this.classList.toggle("active");
+    if (content.style.display === "block") { //Verificar o estilo atual do elemento content. Se estiver visível (block) passa invisível (none) ao carregar no botão 
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
 
   window.requestAnimationFrame(animate);
 
@@ -194,16 +205,17 @@ function init() {
 
 }
 
+//Função para controlo pelo teclado
 function onDocumentKeyDown (event)
 {
   var keyCode=event.which;
 
-  if(keyCode == 84)
+  if(keyCode == 84 && activeCamera==cameraP) //tecla t ativa a camara ortografica
   {
     activeCamera=cameraO;
   }
-  else if(keyCode == 80)
-  {
+  else if(keyCode == 84 && activeCamera==cameraO) //carregar de novo na tecla t para desativar a camara ortográfoca
+  { 
     activeCamera = cameraP;
   }
 }
@@ -217,8 +229,8 @@ function animate() {
 //ajustar a janela
 function onWindowResize() {
  
-  cameraP.aspect = window.innerWidth / window.innerHeight;
-  cameraP.updateProjectionMatrix();
+  activeCamera.aspect = window.innerWidth / window.innerHeight;
+  activeCamera.updateProjectionMatrix();
  
   renderer.setSize( window.innerWidth, window.innerHeight );
  

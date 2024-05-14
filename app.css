@@ -4,7 +4,7 @@
   #diceCont {
     position: absolute;
     top: 100px;
-    left: 100px;
+    left: 40px;
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     font-size: 20px;
@@ -25,6 +25,51 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  #btnDado:hover {
+  #btnDado:hover:hover {
     background-color: #45a049;
   }
+
+  /* Style the button that is used to open and close the collapsible content */
+  #collapsible {
+  position: absolute;
+  bottom: 60px;
+  left: 100px;
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+#collapsible-btn {
+  position: absolute;
+  top: 100px;
+  left: 1300px;
+  background-color: #f1f1f1;
+  border: none;
+  color: black;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration:solid;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#content {
+  display: none;
+  position: absolute;
+  top: 140px;
+  left: 1200px;
+  right: 20px;
+  background-color: #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#content p {
+  margin: 0;
+}
