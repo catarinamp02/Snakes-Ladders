@@ -1,33 +1,52 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
 
-var scene, cameraP,cameraO, renderer, controls, texturaLoader = new THREE.TextureLoader;
+var scene, cameraP,cameraO,pointLight,ambientLight, renderer, controls;
 var sobreposicao = false;
 var activeCamera;
+
 
 function init() {
 
   scene = new THREE.Scene();
 
-  //----Camaras-----
-  //Camara perspetiva
-  cameraP = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  cameraP.position.set(0,15,5); 
-
-  //Camara Ortográfica 
-  cameraO = new THREE.OrthographicCamera(window.innerWidth / - 100, window.innerWidth / 100, window.innerHeight / 100, window.innerHeight / - 100, 1, 1000);
-  cameraO.position.set(0,10,0); 
-  cameraO.lookAt(0,0,0);
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xaaaaaa);
   document.body.appendChild(renderer.domElement);
 
-  var texturaMesa = texturaLoader.load('./Imagens/madeira.jpg');
+  //----Camaras-----
+  //Camara perspetiva
+  cameraP = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  cameraP.position.set(0,15,5);
+  activeCamera = cameraP; 
+
+
+  //Camara Ortográfica 
+  cameraO = new THREE.OrthographicCamera(window.innerWidth / - 100, window.innerWidth / 100, window.innerHeight / 100, window.innerHeight / - 100, 1, 1000);
+  cameraO.position.set(0,10,0); 
+  cameraO.lookAt(0,0,0);
+
+
+  //----Iluminação-----
+  //Point Light 
+  pointLight = new THREE.PointLight(0xFFFFFF,300); 
+  pointLight.position.set(0, 10, 0 ); 
+
+
+  const pLightHelper = new THREE.PointLightHelper(pointLight,1);
+  scene.add(pLightHelper);
+
+  //Ambient Light
+  ambientLight = new THREE.AmbientLight(0xFFFFFF,3);
+  scene.add(ambientLight);
+
+  var texturaLoader = new THREE.TextureLoader;
 
  //mesa
+  var texturaMesa = texturaLoader.load('./Imagens/madeira.jpg');
   var geometriaMesa = new THREE.BoxGeometry(12,0.5,12);
-  var materialMesa = new THREE.MeshBasicMaterial({map:texturaMesa});
+  var materialMesa = new THREE.MeshStandardMaterial({map:texturaMesa});
   var base = new THREE.Mesh(geometriaMesa,materialMesa);
   base.position.set(0,0,0);
   scene.add(base);
@@ -41,12 +60,12 @@ function init() {
   const tabuleiroGeometria = new THREE.BoxGeometry(10,0.3,10);
 
     const tabuleiroMaterial = [ 
-      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-      new THREE.MeshBasicMaterial({map:texturatabuleiro}), //face de cima
-      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
-      new THREE.MeshBasicMaterial({color: 0xCFAA45}),
+      new THREE.MeshStandardMaterial({color: 0xCFAA45}),
+      new THREE.MeshStandardMaterial({color: 0xCFAA45}),
+      new THREE.MeshStandardMaterial({map:texturatabuleiro}), //face de cima
+      new THREE.MeshStandardMaterial({color: 0xCFAA45}),
+      new THREE.MeshStandardMaterial({color: 0xCFAA45}),
+      new THREE.MeshStandardMaterial({color: 0xCFAA45}),
      ];
 
     const tabuleiro = new THREE.Mesh(tabuleiroGeometria, tabuleiroMaterial);
@@ -57,7 +76,7 @@ function init() {
 
   //peao amarelo
   var peaoGeometria = new THREE.ConeGeometry(0.5,1,10);
-  var peao2Material = new THREE.MeshBasicMaterial({color: 0xCFAA45});
+  var peao2Material = new THREE.MeshStandardMaterial({color: 0xCFAA45});
   var peao2= new THREE.Mesh(peaoGeometria, peao2Material);
   peao2.position.set(-5.5,0.4,5.5);
   peao2.name = "Jogador 2";
@@ -69,17 +88,17 @@ function init() {
   //Primeiro boneco-neve
   // Esfera de topo do boneco neve
   var bonecoNeveTopoGeometria = new THREE.SphereGeometry(0.15);
-  var bonecoNeveTopoMaterial = new THREE.MeshBasicMaterial({map:texturaNeve});
+  var bonecoNeveTopoMaterial = new THREE.MeshStandardMaterial({map:texturaNeve});
   var bonecoNeveTopo = new THREE.Mesh(bonecoNeveTopoGeometria,bonecoNeveTopoMaterial);
   bonecoNeveTopo.position.set(0,1.04,0);
   // Esfera do meio do boneco neve
   var bonecoNeveMeioGeometria = new THREE.SphereGeometry(0.2);
-  var bonecoNeveMeioMaterial = new THREE.MeshBasicMaterial({map:texturaNeve});
+  var bonecoNeveMeioMaterial = new THREE.MeshStandardMaterial({map:texturaNeve});
   var bonecoNeveMeio = new THREE.Mesh(bonecoNeveMeioGeometria,bonecoNeveMeioMaterial);
   bonecoNeveMeio.position.set(0,0.8,0);
   // Esfera de base do boneco neve
   var bonecoNeveBaseGeometria = new THREE.SphereGeometry(0.3);
-  var bonecoNeveBaseMaterial = new THREE.MeshBasicMaterial({map:texturaNeve});
+  var bonecoNeveBaseMaterial = new THREE.MeshStandardMaterial({map:texturaNeve});
   var bonecoNeveBase = new THREE.Mesh(bonecoNeveBaseGeometria,bonecoNeveBaseMaterial);
   bonecoNeveBase.position.set(0,0.5,0);
   // x = -5.5
@@ -87,7 +106,7 @@ function init() {
 
   
   var bonecoNeveOlhoGeometria = new THREE.SphereGeometry(0.022);
-  var bonecoNeveOlhoMaterial = new THREE.MeshBasicMaterial({color:'black'});
+  var bonecoNeveOlhoMaterial = new THREE.MeshStandardMaterial({color:'black'});
   var bonecoNeveOlhoEsquerdo = new THREE.Mesh(bonecoNeveOlhoGeometria,bonecoNeveOlhoMaterial);
   var bonecoNeveOlhoDireito = new THREE.Mesh(bonecoNeveOlhoGeometria,bonecoNeveOlhoMaterial);
 
@@ -95,13 +114,13 @@ function init() {
   bonecoNeveOlhoDireito.position.set(-0.06,1.09,0.13);
   
   var bonecoNeveNarizGeometria = new THREE.ConeGeometry(0.018,.1,64);
-  var bonecoNeveNarizMaterial = new THREE.MeshBasicMaterial({map:texturaCenoura});
+  var bonecoNeveNarizMaterial = new THREE.MeshStandardMaterial({map:texturaCenoura});
   var bonecoNeveNariz = new THREE.Mesh(bonecoNeveNarizGeometria,bonecoNeveNarizMaterial);
   bonecoNeveNariz.position.set(0,1.068,0.2);
   bonecoNeveNariz.rotateX(Math.PI/2);
 
   var pequenaEsferaNegraGeometria = new THREE.SphereGeometry(0.011);
-  var pequenaEsferaNegraMaterial = new THREE.MeshBasicMaterial({color:'black'})
+  var pequenaEsferaNegraMaterial = new THREE.MeshStandardMaterial({color:'black'})
   var pequenaEsferaNegra1 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
   var pequenaEsferaNegra2 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
   var pequenaEsferaNegra3 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
@@ -113,7 +132,7 @@ function init() {
 
   // TODO: Acertar geometria dos braços
   var bonecoNeveBracoGeometria = new THREE.CylinderGeometry(0.03,0.05,0.5,64);
-  var bonecoNeveBracoMaterial = new THREE.MeshBasicMaterial({color: 0xC4A484})
+  var bonecoNeveBracoMaterial = new THREE.MeshStandardMaterial({color: 0xC4A484})
   var bonecoNeveBracoEsquerdo = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
   var bonecoNeveBracoDireito = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
   
@@ -158,7 +177,6 @@ function init() {
   bonecoNeve.name = "Boneco de neve";
   scene.add(bonecoNeve);
 
-  activeCamera = cameraP;
   controls = new OrbitControls(activeCamera, renderer.domElement);
  
   controls.target.set(0, 0, 0); //rodar em torno deste ponto
@@ -213,9 +231,9 @@ function init() {
     }
   });
 
+
+
   window.requestAnimationFrame(animate);
-
-
 
 }
 
@@ -232,6 +250,19 @@ function onDocumentKeyDown (event)
   { 
     activeCamera = cameraP;
   }
+  else if(keyCode == 76 && scene.children.includes(ambientLight)) //tecla l ativa e desativa a PointLight
+  {
+    scene.remove(ambientLight);
+    scene.add(pointLight);
+  }
+  else if(keyCode == 76 && scene.children.includes(pointLight)) //tecla l ativa e desativa a PointLight
+  {
+    scene.remove(pointLight);
+    scene.add(ambientLight);
+  }
+
+
+  
 }
 
 function animate() {
