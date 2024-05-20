@@ -80,7 +80,7 @@ function init() {
   var peao2= new THREE.Mesh(peaoGeometria, peao2Material);
   peao2.position.set(-5.5,0.4,5.5);
   peao2.name = "Jogador 2";
-  scene.add(peao2);
+  // scene.add(carro);
 
 
   var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg');
@@ -130,11 +130,13 @@ function init() {
   var pequenaEsferaNegra7 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
   var pequenaEsferaNegra8 = new THREE.Mesh(pequenaEsferaNegraGeometria,pequenaEsferaNegraMaterial);
 
-  // TODO: Acertar geometria dos braços
-  var bonecoNeveBracoGeometria = new THREE.CylinderGeometry(0.03,0.05,0.5,64);
+  // Geometria dos braços boneco neve
+  var bonecoNeveBracoGeometria = new THREE.CylinderGeometry(0.02,0.02,0.3,64);
   var bonecoNeveBracoMaterial = new THREE.MeshStandardMaterial({color: 0xC4A484})
-  var bonecoNeveBracoEsquerdo = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
-  var bonecoNeveBracoDireito = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
+  var bonecoNeveBracoEsquerdoBase = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
+  var bonecoNeveBracoDireitoBase = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
+  var bonecoNeveBracoEsquerdoTopo = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
+  var bonecoNeveBracoDireitoTopo = new THREE.Mesh(bonecoNeveBracoGeometria,bonecoNeveBracoMaterial);
   
   
   
@@ -148,9 +150,16 @@ function init() {
   pequenaEsferaNegra7.position.set(0,0.7,0.23)
   pequenaEsferaNegra8.position.set(0,0.6,0.29)
 
-  //TODO: Posicionamento dos braços do boneco de neve 
-  bonecoNeveBracoEsquerdo.position.set(-2.5,0,0)
-  bonecoNeveBracoDireito.position.set(2.5,0,0)
+  // Posicionamento dos braços do boneco de neve 
+  bonecoNeveBracoEsquerdoBase.position.set(-.21,.82,0)
+  bonecoNeveBracoDireitoBase.position.set(.18,.9,0)
+  bonecoNeveBracoEsquerdoTopo.position.set(-.32,.60,0)
+  bonecoNeveBracoDireitoTopo.position.set(.24,1.12,0)
+  bonecoNeveBracoEsquerdoBase.rotateZ(-(5*Math.PI)/4)
+  bonecoNeveBracoDireitoBase.rotateZ(-(5*Math.PI)/4)
+  bonecoNeveBracoEsquerdoTopo.rotateZ((2.9*Math.PI)/3)
+  bonecoNeveBracoDireitoTopo.rotateZ((0.25*Math.PI)/2)
+
 
 
 
@@ -171,11 +180,105 @@ function init() {
       pequenaEsferaNegra6,
       pequenaEsferaNegra7,
       pequenaEsferaNegra8,
-      bonecoNeveBracoEsquerdo,
-      bonecoNeveBracoDireito);
+      bonecoNeveBracoEsquerdoBase,
+      bonecoNeveBracoDireitoBase,
+      bonecoNeveBracoEsquerdoTopo,
+      bonecoNeveBracoDireitoTopo);
   bonecoNeve.position.set(-5.5,0,4.5);
   bonecoNeve.name = "Boneco de neve";
   scene.add(bonecoNeve);
+
+  function criarRodas() {
+    const geometriaRodas = new THREE.BoxGeometry(.12, .12, .33);
+    const material = new THREE.MeshLambertMaterial({ color: 0x333333 });
+    const roda = new THREE.Mesh(geometriaRodas, material);
+    return roda;
+  }
+  
+  function criarCarro() {
+    const carro = new THREE.Group();
+  
+    const rodaTraseira = criarRodas();
+    rodaTraseira.position.y = .93;
+    rodaTraseira.position.x = -.14;
+    carro.add(rodaTraseira);
+  
+    const rodaFrente = criarRodas();
+    rodaFrente.position.y = .93;
+    rodaFrente.position.x = .14;
+    carro.add(rodaFrente);
+  
+    const parteVermelha = new THREE.Mesh(
+      new THREE.BoxGeometry(.60, .15, .30),
+      new THREE.MeshLambertMaterial({ color: 0xa52523 })
+    );
+    parteVermelha.position.y = 1;
+    carro.add(parteVermelha);
+  
+    const texturaFrenteCarro = getCarroTexturaFrente();
+  
+    const texturaTraseiraCarro = getCarroTexturaFrente();
+  
+    const texturaLadoDireitoCarro = getCarroTexturaLados();
+  
+    const texturaLadoEsquerdoCarro = getCarroTexturaLados();
+    texturaLadoEsquerdoCarro.center = new THREE.Vector2(0.5, 0.5);
+    texturaLadoEsquerdoCarro.rotation = Math.PI;
+    texturaLadoEsquerdoCarro.flipY = false;
+  
+    const parteBranca = new THREE.Mesh(new THREE.BoxGeometry(.33, .12, .24), [
+      new THREE.MeshLambertMaterial({ map: texturaFrenteCarro }),
+      new THREE.MeshLambertMaterial({ map: texturaTraseiraCarro }),
+      new THREE.MeshLambertMaterial({ color: 0xffffff }), // top
+      new THREE.MeshLambertMaterial({ color: 0xffffff }), // bottom
+      new THREE.MeshLambertMaterial({ map: texturaLadoDireitoCarro }),
+      new THREE.MeshLambertMaterial({ map: texturaLadoEsquerdoCarro }),
+    ]);
+    parteBranca.position.x = 0;
+    parteBranca.position.y = 1.12;
+    carro.add(parteBranca);
+  
+    return carro;
+  }
+  
+  
+  const carro = criarCarro();
+  carro.position.set(-5.5,-0.6,5.5) //-5.5,0.4,5.5
+  carro.name = "Carro"
+  scene.add(carro);
+
+  function getCarroTexturaFrente() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 32;
+    const context = canvas.getContext("2d");
+  
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, 64, 32);
+  
+    context.fillStyle = "#666666";
+    context.fillRect(8, 8, 48, 24);
+  
+    return new THREE.CanvasTexture(canvas);
+  }
+
+  function getCarroTexturaLados() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 128;
+    canvas.height = 32;
+    const context = canvas.getContext("2d");
+  
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, 128, 32);
+  
+    context.fillStyle = "#666666";
+    context.fillRect(10, 8, 38, 24);
+    context.fillRect(58, 8, 60, 24);
+  
+    return new THREE.CanvasTexture(canvas);
+  }
+
+  
 
   controls = new OrbitControls(activeCamera, renderer.domElement);
  
@@ -198,18 +301,18 @@ function init() {
        if (numJogadas % 2 != 0) 
       { 
         document.getElementById('numJogadas').innerText = "Vez do "+ bonecoNeve.name + ": ";
-        play(bonecoNeve, peao2, numDado, numJogadas);
+        play(bonecoNeve, carro, numDado, numJogadas);
       } 
       else
       { 
-        document.getElementById('numJogadas').innerText = "Vez do "+ peao2.name + ": ";
-        play(peao2, bonecoNeve, numDado, numJogadas);
+        document.getElementById('numJogadas').innerText = "Vez do "+ carro.name + ": ";
+        play(carro, bonecoNeve, numDado, numJogadas);
 
         //Sobreposição 
-        if (peao2.position.x == bonecoNeve.position.x && peao2.position.z == bonecoNeve.position.z)
+        if (carro.position.x == bonecoNeve.position.x && carro.position.z == bonecoNeve.position.z)
         {
           bonecoNeve.position.x -= 0.3;
-          peao2.position.x += 0.3;
+          carro.position.x += 0.3;
           sobreposicao = true;
         }
         
