@@ -4,6 +4,7 @@ import {OrbitControls} from 'OrbitControls';
 var scene, cameraP,cameraO,pointLight,ambientLight, renderer, controls;
 var sobreposicao = false;
 var activeCamera;
+var peao1;
 
 
 function init() {
@@ -186,6 +187,7 @@ function init() {
       bonecoNeveBracoDireitoTopo);
   bonecoNeve.position.set(-5.5,0,4.5);
   bonecoNeve.name = "Boneco de neve";
+  peao1=bonecoNeve;
   scene.add(bonecoNeve);
 
   function criarRodas() {
@@ -368,11 +370,21 @@ function onDocumentKeyDown (event)
   
 }
 
-function animate() {
+let step = 0;
+let speed = 0.03;
+
+function animate(){
+
+  step += speed;
+  peao1.position.y = Math.abs(Math.sin(step));
+
+  peao1.position.x += 0.008
+  
   controls.update();
   renderer.render(scene, activeCamera);
   window.requestAnimationFrame(animate);
 }
+
  
 //ajustar a janela
 function onWindowResize() {
