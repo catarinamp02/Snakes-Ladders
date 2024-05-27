@@ -338,6 +338,7 @@ function init() {
 
 
   animate();
+  MovePlayer();
 
 }
 
@@ -368,18 +369,31 @@ function onDocumentKeyDown (event)
 }
 
 let step = 0;
-let speed = 0.03;
+let speed = 0.04;
 
 function animate(){
 
-  /* step += speed;
-  peao1.position.y = Math.abs(Math.sin(step));
 
-  peao1.position.x += 0.008 */
   
   controls.update();
   renderer.render(scene, activeCamera);
   requestAnimationFrame(animate);
+}
+
+//
+function MovePlayer(player1, target){
+
+  step += speed;
+  var BonecoNeve = scene.getObjectByName('Boneco de neve');
+  BonecoNeve.position.y = Math.abs(Math.sin(step));
+
+  BonecoNeve.position.x += 0.013
+
+  if( BonecoNeve.position.x < 1.5)
+    {
+      requestAnimationFrame(MovePlayer);
+    }
+  
 }
 
  
@@ -471,7 +485,7 @@ function play(player1, player2, numDado, numJogadas)
     //Linha cujo valor inteiro de Z é impar e negativo
    else if(parseInt(player1.position.z) % 2 != 0 && player1.position.z<0 )
     {
-      player1.position.x = player1.position.x + 1;
+      player1.position.x = player1.position.x + 1; //calcular target 
     }
 
     //Linha cujo valor inteiro de Z é impar e positivo
