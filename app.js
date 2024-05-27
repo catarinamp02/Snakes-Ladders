@@ -1,16 +1,129 @@
 import * as THREE from 'three';
 import {OrbitControls} from 'OrbitControls';
+import { GLTFLoader } from 'GLTFLoader';
 
 var scene, cameraP,cameraO,pointLight,ambientLight, renderer, controls;
 var sobreposicao = false;
 var activeCamera;
+var mixerAnimacao;
+var relogio = new THREE.Clock();
+var importer = new GLTFLoader();
+
+importer.load('./Objetos/floor_stones_tilleable/scene.gltf', function(chaoImportado){
+  mixerAnimacao = new THREE.AnimationMixer(chaoImportado);
+
+  
+  scene.add(chaoImportado.scene);
+  chaoImportado.scene.scale.x = 0.02
+  chaoImportado.scene.scale.y = 0.02
+  chaoImportado.scene.scale.z = 0.02
+  chaoImportado.scene.position.y = -7
+  chaoImportado.scene.position.z = -2
+  
+  chaoImportado.animations; // Array<THREE.AnimationClip>
+  chaoImportado.scene; // THREE.Group
+  chaoImportado.scenes; // Array<THREE.Group>
+  chaoImportado.cameras; // Array<THREE.Camera>
+  chaoImportado.asset; // Object
+});
 
 
+importer.load('./Objetos/ancient_roman_triangle_roof_top/scene.gltf', function(telhado2){  
+  mixerAnimacao = new THREE.AnimationMixer(telhado2);
+
+  
+  scene.add(telhado2.scene);
+  telhado2.scene.scale.x =  telhado2.scene.scale.y =  2
+  telhado2.scene.scale.z = 3
+  telhado2.scene.position.y = 15
+  
+  telhado2.animations; // Array<THREE.AnimationClip>
+  telhado2.scene; // THREE.Group
+  telhado2.scenes; // Array<THREE.Group>
+  telhado2.cameras; // Array<THREE.Camera>
+  telhado2.asset; // Object
+})
+
+
+
+
+importer.load('./Objetos/wall_window/scene.gltf', function(paredeImportada1){
+  mixerAnimacao = new THREE.AnimationMixer(paredeImportada1)
+  
+  paredeImportada1.scene.scale.x = 13.7
+  paredeImportada1.scene.scale.y = 9
+  paredeImportada1.scene.scale.z = 9
+  paredeImportada1.scene.position.x = 1.3
+  paredeImportada1.scene.position.y = -7
+  paredeImportada1.scene.position.z = -12
+  scene.add(paredeImportada1.scene)
+  
+  paredeImportada1.animations; // Array<THREE.AnimationClip>
+  paredeImportada1.scene; // THREE.Group
+  paredeImportada1.scenes; // Array<THREE.Group>
+  paredeImportada1.cameras; // Array<THREE.Camera>
+  paredeImportada1.asset; // Object
+})
+
+
+importer.load('./Objetos/wall_window/scene.gltf', function(paredeImportada2){
+  mixerAnimacao = new THREE.AnimationMixer(paredeImportada2)
+  
+  paredeImportada2.scene.scale.x = 13.7
+  paredeImportada2.scene.scale.y = 9
+  paredeImportada2.scene.scale.z = 9
+  paredeImportada2.scene.position.x = 1.3
+  paredeImportada2.scene.position.y = -7
+  paredeImportada2.scene.position.z = 12
+  scene.add(paredeImportada2.scene)
+
+  paredeImportada2.animations; // Array<THREE.AnimationClip>
+  paredeImportada2.scene; // THREE.Group
+  paredeImportada2.scenes; // Array<THREE.Group>
+  paredeImportada2.cameras; // Array<THREE.Camera>
+  paredeImportada2.asset; // Object
+})
+importer.load('./Objetos/wall_window/scene.gltf', function(paredeImportada3){
+  mixerAnimacao = new THREE.AnimationMixer(paredeImportada3)
+  
+  paredeImportada3.scene.scale.x = 9
+  paredeImportada3.scene.scale.y = 9
+  paredeImportada3.scene.scale.z = 9
+  paredeImportada3.scene.position.x = -18
+  paredeImportada3.scene.position.y = -7
+  paredeImportada3.scene.position.z = 0
+  paredeImportada3.scene.rotateY(Math.PI/2)
+  scene.add(paredeImportada3.scene)
+
+  paredeImportada3.animations; // Array<THREE.AnimationClip>
+  paredeImportada3.scene; // THREE.Group
+  paredeImportada3.scenes; // Array<THREE.Group>
+  paredeImportada3.cameras; // Array<THREE.Camera>
+  paredeImportada3.asset; // Object
+})
+importer.load('./Objetos/wall_window/scene.gltf', function(paredeImportada4){
+  mixerAnimacao = new THREE.AnimationMixer(paredeImportada4)
+  
+  paredeImportada4.scene.scale.x = 9
+  paredeImportada4.scene.scale.y = 9
+  paredeImportada4.scene.scale.z = 9
+  paredeImportada4.scene.position.x = 18
+  paredeImportada4.scene.position.y = -7
+  paredeImportada4.scene.position.z = 0
+  paredeImportada4.scene.rotateY(Math.PI/2)
+  scene.add(paredeImportada4.scene)
+
+  paredeImportada4.animations; // Array<THREE.AnimationClip>
+  paredeImportada4.scene; // THREE.Group
+  paredeImportada4.scenes; // Array<THREE.Group>
+  paredeImportada4.cameras; // Array<THREE.Camera>
+  paredeImportada4.asset; // Object
+})
 
 function init() {
-
+  
   scene = new THREE.Scene();
-
+  
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xaaaaaa);
@@ -86,6 +199,8 @@ function init() {
 
   var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg');
   var texturaCenoura = texturaLoader.load('./Imagens/cenoura.jpg');
+  var texturaPernas = texturaLoader.load('./Imagens/360_F_278776572_zH2spb9z2lYg0pvSi7dWjVvkCwZW9XPz.jpg')
+  var texturaJanela = texturaLoader.load('./Imagens/vidro_janela.jpg')
   //Primeiro boneco-neve
   // Esfera de topo do boneco neve
   var bonecoNeveTopoGeometria = new THREE.SphereGeometry(0.15);
@@ -99,12 +214,31 @@ function init() {
   bonecoNeveMeio.position.set(0,0.8,0);
   // Esfera de base do boneco neve
   var bonecoNeveBaseGeometria = new THREE.SphereGeometry(0.3);
-  var bonecoNeveBaseMaterial = new THREE.MeshStandardMaterial({map:texturaNeve});
+  const bonecoNeveBaseMaterial = new THREE.MeshStandardMaterial({map:texturaNeve});
   var bonecoNeveBase = new THREE.Mesh(bonecoNeveBaseGeometria,bonecoNeveBaseMaterial);
   bonecoNeveBase.position.set(0,0.5,0);
-  // x = -5.5
-  // z = 3.5
+  
+  var janelaMaiorGeometria = new THREE.PlaneGeometry(20,8)
+  var janelaMenorGeometria = new THREE.PlaneGeometry(13,8)
+  var janelaMaterial = new THREE.MeshStandardMaterial({map:texturaJanela, side: THREE.DoubleSide})
+  var janela1 = new THREE.Mesh(janelaMaiorGeometria, janelaMaterial)
+  var janela2 = new THREE.Mesh(janelaMaiorGeometria, janelaMaterial)
+  var janela3 = new THREE.Mesh(janelaMenorGeometria, janelaMaterial)
+  var janela4 = new THREE.Mesh(janelaMenorGeometria, janelaMaterial)
 
+  janela3.rotateY(Math.PI/2)
+  janela4.rotateY(Math.PI/2)
+
+  janela1.position.set(0,4.2,-11.5)
+  janela2.position.set(0,4.2,12.5)
+  janela3.position.set(18,4.5,0.5)
+  janela4.position.set(-18,4.5,0.5)
+  
+
+  scene.add(janela1)
+  scene.add(janela2)
+  scene.add(janela3)
+  scene.add(janela4)
   
   var bonecoNeveOlhoGeometria = new THREE.SphereGeometry(0.022);
   var bonecoNeveOlhoMaterial = new THREE.MeshStandardMaterial({color:'black'});
@@ -161,7 +295,22 @@ function init() {
   bonecoNeveBracoEsquerdoTopo.rotateZ((2.9*Math.PI)/3)
   bonecoNeveBracoDireitoTopo.rotateZ((0.25*Math.PI)/2)
 
+  var pernaMesaGeometria = new THREE.CylinderGeometry(0.19,0.19,7.5)
+  var pernaMesaMaterial = new THREE.MeshStandardMaterial({map:texturaPernas})
+  var pernaMesa1 = new THREE.Mesh(pernaMesaGeometria,pernaMesaMaterial)
+  var pernaMesa2 = new THREE.Mesh(pernaMesaGeometria,pernaMesaMaterial)
+  var pernaMesa3 = new THREE.Mesh(pernaMesaGeometria,pernaMesaMaterial)
+  var pernaMesa4 = new THREE.Mesh(pernaMesaGeometria,pernaMesaMaterial)
+  
+  pernaMesa1.position.set(-3.5,-4,-3.5)
+  pernaMesa2.position.set(3.5,-4,-3.5)
+  pernaMesa3.position.set(-3.5,-4,3.5)
+  pernaMesa4.position.set(3.5,-4,3.5)
 
+  scene.add(pernaMesa1)
+  scene.add(pernaMesa2)
+  scene.add(pernaMesa3)
+  scene.add(pernaMesa4)
 
 
 
