@@ -335,11 +335,7 @@ function init() {
     }
   });
 
-
-
   animate();
-  MovePlayer();
-
 }
 
 //Função para controlo pelo teclado
@@ -368,32 +364,27 @@ function onDocumentKeyDown (event)
   
 }
 
-let step = 0;
-let speed = 0.04;
-
-function animate(){
-
-
-  
+function animate()
+{
   controls.update();
   renderer.render(scene, activeCamera);
   requestAnimationFrame(animate);
 }
 
-//
-function MovePlayer(player1, target){
 
+
+//Chamar esta função para fazer a animação um número de vezes específico 
+//Quando o player chega à posição final (dada pelos dados) a animação para
+//fazer condições para o movimento para sentido negativo de x e z
+
+function MovePlayer(player, target, step = 0, speed = 0.04) {
   step += speed;
-  var BonecoNeve = scene.getObjectByName('Boneco de neve');
-  BonecoNeve.position.y = Math.abs(Math.sin(step));
+  player.position.y = Math.abs(Math.sin(step));
+  player.position.x += 0.013;
 
-  BonecoNeve.position.x += 0.013
-
-  if( BonecoNeve.position.x < 1.5)
-    {
-      requestAnimationFrame(MovePlayer);
-    }
-  
+  if (player.position.x < target) {
+    requestAnimationFrame(() => MovePlayer(player, target, step, speed));
+  }
 }
 
  
@@ -433,6 +424,7 @@ function play(player1, player2, numDado, numJogadas)
     player1.position.z=4.5;
   }
 
+  var target; // posição final para MovePlayer
 
   //Ciclo para os peões se deslocarem em função do valor do dado
   for(var i=0; i<numDado; i++)
@@ -476,16 +468,17 @@ function play(player1, player2, numDado, numJogadas)
     {
       player1.position.x = player1.position.x - 1;
     }
+    
     //Linha cujo valor inteiro de Z é par e positivo
     else if(parseInt(player1.position.z) % 2 == 0 && player1.position.z>0)
     {
-      player1.position.x = player1.position.x + 1;
+      target = player1.position.x + 1;
     }
 
     //Linha cujo valor inteiro de Z é impar e negativo
    else if(parseInt(player1.position.z) % 2 != 0 && player1.position.z<0 )
     {
-      player1.position.x = player1.position.x + 1; //calcular target 
+      player1.position.x = player1.position.x + 1;
     }
 
     //Linha cujo valor inteiro de Z é impar e positivo
@@ -496,6 +489,9 @@ function play(player1, player2, numDado, numJogadas)
 
   }
 
+  
+
+  MovePlayer(player1,target);
 
   //Vitória 
   if (player1.position.x==-4.5 && player1.position.z==-4.5)
@@ -550,7 +546,6 @@ if (player1.position.x==-0.5 && player1.position.z==4.5 )
   {
     player1.position.set(-4.5,player1.position.y,-1.5);
   }
-
 
 }
 
