@@ -244,8 +244,8 @@ function init() {
   
   
   const carro = criarCarro();
-  carro.position.set(-5.5,-0.6,5.5) //-5.5,0.4,5.5
-  carro.name = "Carro"
+  carro.position.set(-5.5,-0.6,5.5);
+  carro.name = "Carro";
   scene.add(carro);
 
   function getCarroTexturaFrente() {
@@ -371,19 +371,51 @@ function animate()
   requestAnimationFrame(animate);
 }
 
-
+var step = 0;
+var speed = 0.04;
 
 //Chamar esta função para fazer a animação um número de vezes específico 
 //Quando o player chega à posição final (dada pelos dados) a animação para
 //fazer condições para o movimento para sentido negativo de x e z
 
-function MovePlayer(player, target, step = 0, speed = 0.04) {
+function MovePlayer(player, targetx, targetz) {
   step += speed;
-  player.position.y = Math.abs(Math.sin(step));
-  player.position.x += 0.013;
 
-  if (player.position.x < target) {
-    requestAnimationFrame(() => MovePlayer(player, target, step, speed));
+  if(player.name =="Carro")
+  {
+    player.position.y = Math.abs(Math.sin(step))-0.3;
+
+  }
+  else
+  {
+    player.position.y = Math.abs(Math.sin(step))+0.3;
+  }
+
+
+
+  
+  //Quando o player está na primeira linha faz este movimento 
+  if(player.position.x <4.5)
+  {
+    player.position.x += 0.013;
+  }
+ 
+  //Para subida na mudança de linha
+  //TODO: Fazer a condição das mudanças de linha
+  else if(player.position.z < 4.5)
+  player.position.z -= 0.013
+
+  //Faz a animação até o player chegar ao target no eixo dos x
+  if (player.position.x <= targetx) {
+    requestAnimationFrame(() => MovePlayer(player, targetx, targetz, step, speed));
+  }
+  else if (player.name =="Carro")
+  {
+    player.position.y = -0.3;
+  }
+  else
+  {
+    player.position.y = 0.3; //Assegura que o peõa fica neste y quando para
   }
 }
 
@@ -414,18 +446,26 @@ function play(player1, player2, numDado, numJogadas)
   //Cada quadrado no tabuleiro é 1x1 
 
   //Para os peões subirem para o tabuleiro na primeira jogada
-  if(numJogadas < 3) {
-    player1.position.y = player1.position.y + 0.3;
-  }
+// if(numJogadas < 3) {
+// player1.position.y = player1.position.y + 5;
+// }
 
-  //Para o peão amarelo ficar alinhado com a primeira linha do tabuliero 
+/*   //Para o peão amarelo ficar alinhado com a primeira linha do tabuliero 
   if (player1.position.z == 5.5)
   {
     player1.position.z=4.5;
-  }
+  } */
 
-  var target; // posição final para MovePlayer
+    //Para o carro subir para o tabuleiro 
+    if (player1.position.x==-5.5 && player1.position.z == 5.5)
+      {
+        player1.position.set(-5.5,0.3,4.5);
+      }
+  
 
+  var targetx = player1.position.x; // posição final no eixo dos x para MovePlayer
+  var targetz = player1.position.z;
+  
   //Ciclo para os peões se deslocarem em função do valor do dado
   for(var i=0; i<numDado; i++)
   {
@@ -449,7 +489,8 @@ function play(player1, player2, numDado, numJogadas)
     //Quando chega ao último quadrado da linha (sentido -> )
     if(player1.position.x==4.5)
     {
-      player1.position.z = player1.position.z - 1;
+      targetz = targetz - 1;
+      //player1.position.z = player1.position.z - 1;
       numDado=numDado-1; //A subida também conta como um passo
     }
       
@@ -472,7 +513,7 @@ function play(player1, player2, numDado, numJogadas)
     //Linha cujo valor inteiro de Z é par e positivo
     else if(parseInt(player1.position.z) % 2 == 0 && player1.position.z>0)
     {
-      target = player1.position.x + 1;
+      targetx = targetx + 1;
     }
 
     //Linha cujo valor inteiro de Z é impar e negativo
@@ -491,7 +532,7 @@ function play(player1, player2, numDado, numJogadas)
 
   
 
-  MovePlayer(player1,target);
+  MovePlayer(player1,targetx,targetz);
 
   //Vitória 
   if (player1.position.x==-4.5 && player1.position.z==-4.5)
