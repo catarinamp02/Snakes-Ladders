@@ -28,20 +28,37 @@ importer.load('./Objetos/floor_stones_tilleable/scene.gltf', function(chaoImport
 });
 
 
-importer.load('./Objetos/ancient_roman_triangle_roof_top/scene.gltf', function(telhado2){  
-  mixerAnimacao = new THREE.AnimationMixer(telhado2);
+// importer.load('./Objetos/ancient_roman_triangle_roof_top/scene.gltf', function(telhado2){  
+//   mixerAnimacao = new THREE.AnimationMixer(telhado2);
 
   
-  scene.add(telhado2.scene);
-  telhado2.scene.scale.x =  telhado2.scene.scale.y =  2
-  telhado2.scene.scale.z = 3
-  telhado2.scene.position.y = 15
+//   scene.add(telhado2.scene);
+//   telhado2.scene.scale.x =  telhado2.scene.scale.y =  2
+//   telhado2.scene.scale.z = 3
+//   telhado2.scene.position.y = 15
   
-  telhado2.animations; // Array<THREE.AnimationClip>
-  telhado2.scene; // THREE.Group
-  telhado2.scenes; // Array<THREE.Group>
-  telhado2.cameras; // Array<THREE.Camera>
-  telhado2.asset; // Object
+//   telhado2.animations; // Array<THREE.AnimationClip>
+//   telhado2.scene; // THREE.Group
+//   telhado2.scenes; // Array<THREE.Group>
+//   telhado2.cameras; // Array<THREE.Camera>
+//   telhado2.asset; // Object
+// })
+
+importer.load('./Objetos/realistic_feudal_japan_roof/scene.gltf', function(telhado3){  
+  mixerAnimacao = new THREE.AnimationMixer(telhado3);
+
+  
+  scene.add(telhado3.scene);
+  telhado3.scene.scale.x = 3 
+  telhado3.scene.scale.y =  2
+  telhado3.scene.scale.z = 3
+  telhado3.scene.position.y = 11
+  
+  telhado3.animations; // Array<THREE.AnimationClip>
+  telhado3.scene; // THREE.Group
+  telhado3.scenes; // Array<THREE.Group>
+  telhado3.cameras; // Array<THREE.Camera>
+  telhado3.asset; // Object
 })
 
 
