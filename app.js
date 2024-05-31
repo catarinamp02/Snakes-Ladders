@@ -1,13 +1,19 @@
 import * as THREE from 'three';
-import {OrbitControls} from 'OrbitControls';
+import { OrbitControls } from 'OrbitControls';
 import { GLTFLoader } from 'GLTFLoader';
+import { PointerLockControls } from 'PointerLockControls';
 
-var scene, cameraP,cameraO,pointLight,ambientLight, renderer, controls;
+var scene, cameraP,cameraO,pointLight,ambientLight, renderer, orbitControls;
 var sobreposicao = false;
 var activeCamera;
 var mixerAnimacao;
 var relogio = new THREE.Clock();
 var importer = new GLTFLoader();
+
+var controls;
+
+
+
 
 importer.load('./Objetos/floor_stones_tilleable/scene.gltf', function(chaoImportado){
   mixerAnimacao = new THREE.AnimationMixer(chaoImportado);
@@ -27,22 +33,6 @@ importer.load('./Objetos/floor_stones_tilleable/scene.gltf', function(chaoImport
   chaoImportado.asset; // Object
 });
 
-
-// importer.load('./Objetos/ancient_roman_triangle_roof_top/scene.gltf', function(telhado2){  
-//   mixerAnimacao = new THREE.AnimationMixer(telhado2);
-
-  
-//   scene.add(telhado2.scene);
-//   telhado2.scene.scale.x =  telhado2.scene.scale.y =  2
-//   telhado2.scene.scale.z = 3
-//   telhado2.scene.position.y = 15
-  
-//   telhado2.animations; // Array<THREE.AnimationClip>
-//   telhado2.scene; // THREE.Group
-//   telhado2.scenes; // Array<THREE.Group>
-//   telhado2.cameras; // Array<THREE.Camera>
-//   telhado2.asset; // Object
-// })
 
 importer.load('./Objetos/realistic_feudal_japan_roof/scene.gltf', function(telhado3){  
   mixerAnimacao = new THREE.AnimationMixer(telhado3);
@@ -186,6 +176,22 @@ function init() {
   axesHelper.position.set(0,1,0)
   scene.add( axesHelper );
 
+  controls = new PointerLockControls(cameraP, renderer.domElement);
+  controls.addEventListener('lock', function(){
+
+  });
+  controls.addEventListener('unlock', function(){
+  
+  });
+  
+  document.addEventListener(
+    'click',
+    function() {
+      controls.lock()
+    },
+    false
+  )
+
   //tabuleiro
   const texturatabuleiro = texturaLoader.load('./Imagens/base_tabuleiro.jpg');
   const tabuleiroGeometria = new THREE.BoxGeometry(10,0.3,10);
@@ -203,7 +209,32 @@ function init() {
 
     tabuleiro.position.set(0,0.4,0);
     scene.add(tabuleiro);
+  
+  var texture_dir = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/posx.jpg');
+  var texture_esq = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/negx.jpg');
+  var texture_up = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/posy.jpg');
+  var texture_dn = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/negy.jpg');
+  var texture_bk = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/posz.jpg');
+  var texture_ft = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/negz.jpg');
 
+  var materialArray = [];
+
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_dir}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_esq}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_up}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_dn}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_bk}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_ft}));
+
+  for (var i = 0; i < 6; i++) {
+    materialArray[i].side = THREE.BackSide;
+  }
+
+  var skyboxGeo = new THREE.BoxGeometry(100,100,100);
+
+  var skybox = new THREE.Mesh(skyboxGeo, materialArray);
+
+  scene.add(skybox);
 
   //peao amarelo
   var peaoGeometria = new THREE.ConeGeometry(0.5,1,10);
@@ -445,16 +476,18 @@ function init() {
     return new THREE.CanvasTexture(canvas);
   }
 
+
+
   
 
-  controls = new OrbitControls(activeCamera, renderer.domElement);
+  orbitControls = new OrbitControls(activeCamera, renderer.domElement);
  
-  controls.target.set(0, 0, 0); //rodar em torno deste ponto
+  orbitControls.target.set(0, 0, 0); //rodar em torno deste ponto
  
-  controls.enablePan = false; //Para que não seja possível mexer a camara lateralmente, apenas rodar em torno do ponto definido
-  controls.maxPolarAngle = Math.PI / 2; //restricts how far the camera can tilt up or down -> Math.PI / 2 (which is 90 degrees in radians)
+  orbitControls.enablePan = false; //Para que não seja possível mexer a camara lateralmente, apenas rodar em torno do ponto definido
+  orbitControls.maxPolarAngle = Math.PI / 2; //restricts how far the camera can tilt up or down -> Math.PI / 2 (which is 90 degrees in radians)
  
-  controls.enableDamping = true; //transições mais suaves ao mexer a camara 
+  orbitControls.enableDamping = true; //transições mais suaves ao mexer a camara 
 
   document.addEventListener("keydown", onDocumentKeyDown, false);
 
@@ -531,6 +564,22 @@ function onDocumentKeyDown (event)
     scene.remove(pointLight);
     scene.add(ambientLight);
   }
+  if(keyCode == 87)
+  {
+      controls.moveForward(0.5)
+  }
+  else if(keyCode == 83)
+  {
+      controls.moveForward(-0.5)
+  }
+  else if(keyCode == 65)
+  {
+      controls.moveRight(-0.5)
+  }
+  else if(keyCode == 68)
+  {
+      controls.moveRight(0.5)
+  }
   
 }
 
@@ -541,7 +590,7 @@ function animate(){
 
 
   
-  controls.update();
+  orbitControls.update();
   renderer.render(scene, activeCamera);
   requestAnimationFrame(animate);
 }
