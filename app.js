@@ -1,17 +1,136 @@
 import * as THREE from 'three';
-import {OrbitControls} from 'OrbitControls';
+import { OrbitControls } from 'OrbitControls';
+import { GLTFLoader } from 'GLTFLoader';
+import { PointerLockControls } from 'PointerLockControls';
 
-var scene, cameraP,cameraO,pointLight,ambientLight, renderer, controls;
+var scene, cameraP,cameraO,pointLight,ambientLight, renderer, orbitControls;
 var sobreposicao = false;
 var activeCamera;
+var mixerAnimacao;
+var relogio = new THREE.Clock();
+var importer = new GLTFLoader();
 var numJogadas = 1;
+var controls;
 
 
+
+
+importer.load('./Objetos/floor_stones_tilleable/scene.gltf', function(chaoImportado){
+  mixerAnimacao = new THREE.AnimationMixer(chaoImportado);
+
+  
+  scene.add(chaoImportado.scene);
+  chaoImportado.scene.scale.x = 0.02
+  chaoImportado.scene.scale.y = 0.02
+  chaoImportado.scene.scale.z = 0.02
+  chaoImportado.scene.position.y = -7
+  chaoImportado.scene.position.z = -2
+  
+  chaoImportado.animations; // Array<THREE.AnimationClip>
+  chaoImportado.scene; // THREE.Group
+  chaoImportado.scenes; // Array<THREE.Group>
+  chaoImportado.cameras; // Array<THREE.Camera>
+  chaoImportado.asset; // Object
+});
+
+
+importer.load('./Objetos/realistic_feudal_japan_roof/scene.gltf', function(telhado3){  
+  mixerAnimacao = new THREE.AnimationMixer(telhado3);
+
+  
+  scene.add(telhado3.scene);
+  telhado3.scene.scale.x = 3 
+  telhado3.scene.scale.y =  2
+  telhado3.scene.scale.z = 3
+  telhado3.scene.position.y = 11
+  
+  telhado3.animations; // Array<THREE.AnimationClip>
+  telhado3.scene; // THREE.Group
+  telhado3.scenes; // Array<THREE.Group>
+  telhado3.cameras; // Array<THREE.Camera>
+  telhado3.asset; // Object
+})
+
+
+
+
+importer.load('./Objetos/wall_window/scene.gltf', function(paredeImportada1){
+  mixerAnimacao = new THREE.AnimationMixer(paredeImportada1)
+  
+  paredeImportada1.scene.scale.x = 13.7
+  paredeImportada1.scene.scale.y = 9
+  paredeImportada1.scene.scale.z = 9
+  paredeImportada1.scene.position.x = 1.3
+  paredeImportada1.scene.position.y = -7
+  paredeImportada1.scene.position.z = -12
+  scene.add(paredeImportada1.scene)
+  
+  paredeImportada1.animations; // Array<THREE.AnimationClip>
+  paredeImportada1.scene; // THREE.Group
+  paredeImportada1.scenes; // Array<THREE.Group>
+  paredeImportada1.cameras; // Array<THREE.Camera>
+  paredeImportada1.asset; // Object
+})
+
+
+importer.load('./Objetos/wall_window/scene.gltf', function(paredeImportada2){
+  mixerAnimacao = new THREE.AnimationMixer(paredeImportada2)
+  
+  paredeImportada2.scene.scale.x = 13.7
+  paredeImportada2.scene.scale.y = 9
+  paredeImportada2.scene.scale.z = 9
+  paredeImportada2.scene.position.x = 1.3
+  paredeImportada2.scene.position.y = -7
+  paredeImportada2.scene.position.z = 12
+  scene.add(paredeImportada2.scene)
+
+  paredeImportada2.animations; // Array<THREE.AnimationClip>
+  paredeImportada2.scene; // THREE.Group
+  paredeImportada2.scenes; // Array<THREE.Group>
+  paredeImportada2.cameras; // Array<THREE.Camera>
+  paredeImportada2.asset; // Object
+})
+importer.load('./Objetos/wall_window/scene.gltf', function(paredeImportada3){
+  mixerAnimacao = new THREE.AnimationMixer(paredeImportada3)
+  
+  paredeImportada3.scene.scale.x = 9
+  paredeImportada3.scene.scale.y = 9
+  paredeImportada3.scene.scale.z = 9
+  paredeImportada3.scene.position.x = -18
+  paredeImportada3.scene.position.y = -7
+  paredeImportada3.scene.position.z = 0
+  paredeImportada3.scene.rotateY(Math.PI/2)
+  scene.add(paredeImportada3.scene)
+
+  paredeImportada3.animations; // Array<THREE.AnimationClip>
+  paredeImportada3.scene; // THREE.Group
+  paredeImportada3.scenes; // Array<THREE.Group>
+  paredeImportada3.cameras; // Array<THREE.Camera>
+  paredeImportada3.asset; // Object
+})
+importer.load('./Objetos/wall_window/scene.gltf', function(paredeImportada4){
+  mixerAnimacao = new THREE.AnimationMixer(paredeImportada4)
+  
+  paredeImportada4.scene.scale.x = 9
+  paredeImportada4.scene.scale.y = 9
+  paredeImportada4.scene.scale.z = 9
+  paredeImportada4.scene.position.x = 18
+  paredeImportada4.scene.position.y = -7
+  paredeImportada4.scene.position.z = 0
+  paredeImportada4.scene.rotateY(Math.PI/2)
+  scene.add(paredeImportada4.scene)
+
+  paredeImportada4.animations; // Array<THREE.AnimationClip>
+  paredeImportada4.scene; // THREE.Group
+  paredeImportada4.scenes; // Array<THREE.Group>
+  paredeImportada4.cameras; // Array<THREE.Camera>
+  paredeImportada4.asset; // Object
+})
 
 function init() {
-
+  
   scene = new THREE.Scene();
-
+  
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setClearColor(0xaaaaaa);
@@ -49,6 +168,22 @@ function init() {
   base.position.set(0,0,0);
   scene.add(base);
 
+  controls = new PointerLockControls(cameraP, renderer.domElement);
+  controls.addEventListener('lock', function(){
+
+  });
+  controls.addEventListener('unlock', function(){
+  
+  });
+  
+  document.addEventListener(
+    'click',
+    function() {
+      controls.lock()
+    },
+    false
+  )
+  
   //tabuleiro
   const texturatabuleiro = texturaLoader.load('./Imagens/base_tabuleiro.jpg');
   const tabuleiroGeometria = new THREE.BoxGeometry(10,0.3,10);
@@ -66,10 +201,37 @@ function init() {
 
     tabuleiro.position.set(0,0.4,0);
     scene.add(tabuleiro);
+  
+  var texture_dir = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/posx.jpg');
+  var texture_esq = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/negx.jpg');
+  var texture_up = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/posy.jpg');
+  var texture_dn = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/negy.jpg');
+  var texture_bk = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/posz.jpg');
+  var texture_ft = new THREE.TextureLoader().load('./Skybox/indoors-skyboxes/DallasW/negz.jpg');
 
+  var materialArray = [];
+
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_dir}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_esq}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_up}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_dn}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_bk}));
+  materialArray.push(new THREE.MeshBasicMaterial({map:texture_ft}));
+
+  for (var i = 0; i < 6; i++) {
+    materialArray[i].side = THREE.BackSide;
+  }
+
+  var skyboxGeo = new THREE.BoxGeometry(100,100,100);
+
+  var skybox = new THREE.Mesh(skyboxGeo, materialArray);
+
+  scene.add(skybox);
 
   var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg');
   var texturaCenoura = texturaLoader.load('./Imagens/cenoura.jpg');
+  var texturaPernas = texturaLoader.load('./Imagens/360_F_278776572_zH2spb9z2lYg0pvSi7dWjVvkCwZW9XPz.jpg')
+  var texturaJanela = texturaLoader.load('./Imagens/vidro_janela.jpg')
   //Primeiro boneco-neve
   // Esfera de topo do boneco neve
   var bonecoNeveTopoGeometria = new THREE.SphereGeometry(0.15);
@@ -83,12 +245,31 @@ function init() {
   bonecoNeveMeio.position.set(0,0.8,0);
   // Esfera de base do boneco neve
   var bonecoNeveBaseGeometria = new THREE.SphereGeometry(0.3);
-  var bonecoNeveBaseMaterial = new THREE.MeshStandardMaterial({map:texturaNeve});
+  const bonecoNeveBaseMaterial = new THREE.MeshStandardMaterial({map:texturaNeve});
   var bonecoNeveBase = new THREE.Mesh(bonecoNeveBaseGeometria,bonecoNeveBaseMaterial);
   bonecoNeveBase.position.set(0,0.5,0);
-  // x = -5.5
-  // z = 3.5
+  
+  var janelaMaiorGeometria = new THREE.PlaneGeometry(20,8)
+  var janelaMenorGeometria = new THREE.PlaneGeometry(13,8)
+  var janelaMaterial = new THREE.MeshStandardMaterial({map:texturaJanela, side: THREE.DoubleSide})
+  var janela1 = new THREE.Mesh(janelaMaiorGeometria, janelaMaterial)
+  var janela2 = new THREE.Mesh(janelaMaiorGeometria, janelaMaterial)
+  var janela3 = new THREE.Mesh(janelaMenorGeometria, janelaMaterial)
+  var janela4 = new THREE.Mesh(janelaMenorGeometria, janelaMaterial)
 
+  janela3.rotateY(Math.PI/2)
+  janela4.rotateY(Math.PI/2)
+
+  janela1.position.set(0,4.2,-11.5)
+  janela2.position.set(0,4.2,12.5)
+  janela3.position.set(18,4.5,0.5)
+  janela4.position.set(-18,4.5,0.5)
+  
+
+  scene.add(janela1)
+  scene.add(janela2)
+  scene.add(janela3)
+  scene.add(janela4)
   
   var bonecoNeveOlhoGeometria = new THREE.SphereGeometry(0.022);
   var bonecoNeveOlhoMaterial = new THREE.MeshStandardMaterial({color:'black'});
@@ -145,7 +326,22 @@ function init() {
   bonecoNeveBracoEsquerdoTopo.rotateZ((2.9*Math.PI)/3)
   bonecoNeveBracoDireitoTopo.rotateZ((0.25*Math.PI)/2)
 
+  var pernaMesaGeometria = new THREE.CylinderGeometry(0.19,0.19,7.5)
+  var pernaMesaMaterial = new THREE.MeshStandardMaterial({map:texturaPernas})
+  var pernaMesa1 = new THREE.Mesh(pernaMesaGeometria,pernaMesaMaterial)
+  var pernaMesa2 = new THREE.Mesh(pernaMesaGeometria,pernaMesaMaterial)
+  var pernaMesa3 = new THREE.Mesh(pernaMesaGeometria,pernaMesaMaterial)
+  var pernaMesa4 = new THREE.Mesh(pernaMesaGeometria,pernaMesaMaterial)
+  
+  pernaMesa1.position.set(-3.5,-4,-3.5)
+  pernaMesa2.position.set(3.5,-4,-3.5)
+  pernaMesa3.position.set(-3.5,-4,3.5)
+  pernaMesa4.position.set(3.5,-4,3.5)
 
+  scene.add(pernaMesa1)
+  scene.add(pernaMesa2)
+  scene.add(pernaMesa3)
+  scene.add(pernaMesa4)
 
 
 
@@ -263,16 +459,18 @@ function init() {
     return new THREE.CanvasTexture(canvas);
   }
 
+
+
   
 
-  controls = new OrbitControls(activeCamera, renderer.domElement);
+  orbitControls = new OrbitControls(activeCamera, renderer.domElement);
  
-  controls.target.set(0, 0, 0); //rodar em torno deste ponto
+  orbitControls.target.set(0, 0, 0); //rodar em torno deste ponto
  
-  controls.enablePan = false; //Para que não seja possível mexer a camara lateralmente, apenas rodar em torno do ponto definido
-  controls.maxPolarAngle = Math.PI / 2; //restricts how far the camera can tilt up or down -> Math.PI / 2 (which is 90 degrees in radians)
+  orbitControls.enablePan = false; //Para que não seja possível mexer a camara lateralmente, apenas rodar em torno do ponto definido
+  orbitControls.maxPolarAngle = Math.PI / 2; //restricts how far the camera can tilt up or down -> Math.PI / 2 (which is 90 degrees in radians)
  
-  controls.enableDamping = true; //transições mais suaves ao mexer a camara 
+  orbitControls.enableDamping = true; //transições mais suaves ao mexer a camara 
 
   document.addEventListener("keydown", onDocumentKeyDown, false);
 
@@ -345,9 +543,24 @@ function onDocumentKeyDown (event)
     scene.remove(pointLight);
     scene.add(ambientLight);
   }
+  if(keyCode == 87)
+  {
+      controls.moveForward(0.5)
+  }
+  else if(keyCode == 83)
+  {
+      controls.moveForward(-0.5)
+  }
+  else if(keyCode == 65)
+  {
+      controls.moveRight(-0.5)
+  }
+  else if(keyCode == 68)
+  {
+      controls.moveRight(0.5)
+  }
   
 }
-
 function animate()
 {
   controls.update();
