@@ -68,15 +68,6 @@ function init() {
     scene.add(tabuleiro);
 
 
-  //peao amarelo
-  var peaoGeometria = new THREE.ConeGeometry(0.5,1,10);
-  var peao2Material = new THREE.MeshStandardMaterial({color: 0xCFAA45});
-  var peao2= new THREE.Mesh(peaoGeometria, peao2Material);
-  peao2.position.set(-5.5,0.4,5.5);
-  peao2.name = "Jogador 2";
-  // scene.add(carro);
-
-
   var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg');
   var texturaCenoura = texturaLoader.load('./Imagens/cenoura.jpg');
   //Primeiro boneco-neve
@@ -289,7 +280,7 @@ function init() {
   
 
   document.getElementById("btnDado").addEventListener("click", function () {
-      var numDado = 10//Math.floor(Math.random() * (6 - 1 + 1) + 1);
+      var numDado = 5//Math.floor(Math.random() * (6 - 1 + 1) + 1);
       document.getElementById("Dado").innerText = numDado;
 
        if (numJogadas % 2 != 0) 
@@ -408,16 +399,20 @@ function MovePlayer(player, targetx, targetz) {
   }
  
 
-  if (Math.round(player.position.x * 10) / 10 != Math.round(targetx * 10) / 10) {
+  if ((Math.round(player.position.x * 10) / 10 != Math.round(targetx * 10) / 10 ) || (Math.round(player.position.z * 10) / 10 != Math.round(targetz * 10) / 10)) {
     requestAnimationFrame(() => MovePlayer(player, targetx, targetz, step, speed));
   }
   else if (player.name =="Carro")
   {
     player.position.y = -0.3;
+    EscadotesCobras(player);
+    vitoria(player);
   }
   else
   {
     player.position.y = 0.3; //Assegura que o peõa fica neste y quando para
+    EscadotesCobras(player);
+    vitoria(player);
   }
 
 
@@ -479,14 +474,14 @@ function play(player1, player2, numDado)
     //-----Mudanças de linha------
     
     //Quando chega ao último quadrado da linha (sentido -> )
-     if(targetx > 4.50)
+     if(targetx > 4.4)
     {
       targetz = targetz - 1;
       numDado=numDado-1; //A subida também conta como um passo
     }
       
     //Quando chega ao último quadrado da linha (sentido <- )
-    if(player1.position.x==-4.5)
+    if(targetx <-4.4 && numJogadas >3)
     {
       targetz = targetz - 1;
       numDado = numDado-1; //A subida também conta como um passo
@@ -523,17 +518,24 @@ function play(player1, player2, numDado)
 
   MovePlayer(player1,targetx,targetz);
 
-  //Vitória 
-  if (player1.position.x==-4.5 && player1.position.z==-4.5)
-  {   
-   setTimeout(() => {
-      alert("O " + player1.name + " ganhou!!");
-      window.location.reload();
-    }, 20);
-  }
+}
 
-// Escadotes
-if (player1.position.x==-0.5 && player1.position.z==4.5 )
+
+function vitoria(player1)
+{
+  if (player1.position.x==-4.5 && player1.position.z==-4.5)
+    {   
+     setTimeout(() => {
+        alert("O " + player1.name + " ganhou!!");
+        window.location.reload();
+      }, 20);
+    }
+}
+
+function EscadotesCobras (player1)
+{
+  // Escadotes
+if (Math.round(player1.position.x * 10) / 10 == -0.5 && (Math.round(player1.position.z * 10) / 10 == 4.5))
   {
     player1.position.set(-2.5,player1.position.y,-0.5);
   } 
@@ -541,40 +543,42 @@ if (player1.position.x==-0.5 && player1.position.z==4.5 )
   {
     player1.position.set(3.5,player1.position.y,0.5);
   } 
-
-  else if (player1.position.x==2.5 && player1.position.z==-0.5 )
+  else if ( Math.round(player1.position.x * 10) / 10 == 1.5 && (Math.round(player1.position.z * 10) / 10 == 3.5))
+  {
+    player1.position.set(3.5,player1.position.y,0.5);
+  } 
+  else if ( Math.round(player1.position.x * 10) / 10 == 2.5 && (Math.round(player1.position.z * 10) / 10 == -0.5))
   {
     player1.position.set(3.5,player1.position.y,-2.5);
   } 
-  else if (player1.position.x==-1.5 && player1.position.z==-1.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == -1.5 && (Math.round(player1.position.z * 10) / 10 == -1.5))
   {
     player1.position.set(-2.5,player1.position.y,-3.5);
   }
 
   //Cobras 
-  else if (player1.position.x==-2.5 && player1.position.z==1.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == -2.5 && (Math.round(player1.position.z * 10) / 10 == 1.5) )
   {
     player1.position.set(-4.5,player1.position.y,3.5);
   }
 
-  else if (player1.position.x==4.5 && player1.position.z==-0.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == 4.5 && (Math.round(player1.position.z * 10) / 10 == -0.5) )
   {
     player1.position.set(4.5,player1.position.y,4.5);
   }
 
-  else if (player1.position.x==-0.5 && player1.position.z==-2.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == -0.5 && (Math.round(player1.position.z * 10) / 10 == -2.5))
   {
     player1.position.set(1.5,player1.position.y,-0.5);
   }
 
-  else if (player1.position.x==4.5 && player1.position.z==-4.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == 4.5 && (Math.round(player1.position.z * 10) / 10 == -4.5))
   {
     player1.position.set(2.5,player1.position.y,-2.5);
   }
 
-  else if (player1.position.x==-1.5 && player1.position.z==-4.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == -1.5 && (Math.round(player1.position.z * 10) / 10 == -4.5))
   {
     player1.position.set(-4.5,player1.position.y,-1.5);
   }
-
 }
