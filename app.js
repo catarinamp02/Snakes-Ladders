@@ -460,9 +460,6 @@ function init() {
   }
 
 
-
-  
-
   orbitControls = new OrbitControls(activeCamera, renderer.domElement);
  
   orbitControls.target.set(0, 0, 0); //rodar em torno deste ponto
@@ -563,7 +560,8 @@ function onDocumentKeyDown (event)
 }
 function animate()
 {
-  //controls.update();
+  
+  orbitControls.update();
   renderer.render(scene, activeCamera);
   requestAnimationFrame(animate);
 }
@@ -694,7 +692,7 @@ function play(player1, player2, numDado)
     }
       
     //Quando chega ao último quadrado da linha (sentido <- )
-    if(targetx <-4.4 && numJogadas >3)
+    if(targetx <-4.4 && numJogadas > 3)
     {
       targetz = targetz - 1;
       numDado = numDado-1; //A subida também conta como um passo
