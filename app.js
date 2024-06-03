@@ -9,7 +9,7 @@ var activeCamera;
 var mixerAnimacao;
 var relogio = new THREE.Clock();
 var importer = new GLTFLoader();
-
+var numJogadas = 1;
 var controls;
 
 
@@ -154,10 +154,6 @@ function init() {
   pointLight = new THREE.PointLight(0xFFFFFF,300); 
   pointLight.position.set(0, 10, 0 ); 
 
-
-  const pLightHelper = new THREE.PointLightHelper(pointLight,1);
-  scene.add(pLightHelper);
-
   //Ambient Light
   ambientLight = new THREE.AmbientLight(0xFFFFFF,3);
   scene.add(ambientLight);
@@ -171,10 +167,6 @@ function init() {
   var base = new THREE.Mesh(geometriaMesa,materialMesa);
   base.position.set(0,0,0);
   scene.add(base);
-
-  const axesHelper = new THREE.AxesHelper( 5 );
-  axesHelper.position.set(0,1,0)
-  scene.add( axesHelper );
 
   controls = new PointerLockControls(cameraP, renderer.domElement);
   controls.addEventListener('lock', function(){
@@ -191,7 +183,7 @@ function init() {
     },
     false
   )
-
+  
   //tabuleiro
   const texturatabuleiro = texturaLoader.load('./Imagens/base_tabuleiro.jpg');
   const tabuleiroGeometria = new THREE.BoxGeometry(10,0.3,10);
@@ -235,15 +227,6 @@ function init() {
   var skybox = new THREE.Mesh(skyboxGeo, materialArray);
 
   scene.add(skybox);
-
-  //peao amarelo
-  var peaoGeometria = new THREE.ConeGeometry(0.5,1,10);
-  var peao2Material = new THREE.MeshStandardMaterial({color: 0xCFAA45});
-  var peao2= new THREE.Mesh(peaoGeometria, peao2Material);
-  peao2.position.set(-5.5,0.4,5.5);
-  peao2.name = "Jogador 2";
-  // scene.add(carro);
-
 
   var texturaNeve = texturaLoader.load('./Imagens/textura_neve2.jpg');
   var texturaCenoura = texturaLoader.load('./Imagens/cenoura.jpg');
@@ -441,8 +424,8 @@ function init() {
   
   
   const carro = criarCarro();
-  carro.position.set(-5.5,-0.6,5.5) //-5.5,0.4,5.5
-  carro.name = "Carro"
+  carro.position.set(-5.5,-0.6,5.5);
+  carro.name = "Carro";
   scene.add(carro);
 
   function getCarroTexturaFrente() {
@@ -492,21 +475,21 @@ function init() {
   document.addEventListener("keydown", onDocumentKeyDown, false);
 
   //Lançar dados
-  var numJogadas = 1;
+  
 
   document.getElementById("btnDado").addEventListener("click", function () {
-      var numDado = Math.floor(Math.random() * (6 - 1 + 1) + 1);
+      var numDado = 5//Math.floor(Math.random() * (6 - 1 + 1) + 1);
       document.getElementById("Dado").innerText = numDado;
 
        if (numJogadas % 2 != 0) 
       { 
         document.getElementById('numJogadas').innerText = "Vez do "+ bonecoNeve.name + ": ";
-        play(bonecoNeve, carro, numDado, numJogadas);
+        play(bonecoNeve, carro, numDado);
       } 
       else
       { 
         document.getElementById('numJogadas').innerText = "Vez do "+ carro.name + ": ";
-        play(carro, bonecoNeve, numDado, numJogadas);
+        play(carro, bonecoNeve, numDado);
 
         //Sobreposição 
         if (carro.position.x == bonecoNeve.position.x && carro.position.z == bonecoNeve.position.z)
@@ -534,11 +517,7 @@ function init() {
     }
   });
 
-
-
   animate();
-  MovePlayer();
-
 }
 
 //Função para controlo pelo teclado
@@ -582,33 +561,75 @@ function onDocumentKeyDown (event)
   }
   
 }
-
-let step = 0;
-let speed = 0.04;
-
-function animate(){
-
-
-  
-  orbitControls.update();
+function animate()
+{
+  controls.update();
   renderer.render(scene, activeCamera);
   requestAnimationFrame(animate);
 }
 
-//
-function MovePlayer(player1, target){
+var step = 0;
+var speed = 0.04;
+let saltoZ = false;
 
+//Chamar esta função para fazer a animação um número de vezes específico 
+//Quando o player chega à posição final (dada pelos dados) a animação para
+
+function MovePlayer(player, targetx, targetz) {
   step += speed;
-  var BonecoNeve = scene.getObjectByName('Boneco de neve');
-  BonecoNeve.position.y = Math.abs(Math.sin(step));
 
-  BonecoNeve.position.x += 0.013
+  if(player.name =="Carro")
+  {
+    player.position.y = Math.abs(Math.sin(step))-0.3;
 
-  if( BonecoNeve.position.x < 1.5)
-    {
-      requestAnimationFrame(MovePlayer);
-    }
-  
+  }
+  else
+  {
+    player.position.y = Math.abs(Math.sin(step))+0.3;
+  }
+
+
+  if((Math.round(player.position.x * 10)/10 >= 4.5 || Math.round(player.position.x * 10)/10 <= -4.5) && numJogadas>3)
+  {
+    saltoZ = true;
+    player.position.z -= 0.018;
+    
+  }
+
+  if(Math.round(player.position.z * 10) / 10 == Math.round(targetz * 10) / 10)
+  {
+    saltoZ = false;
+  }
+
+
+  if(parseInt(player.position.z) % 2 == 0 && player.position.z>0 && saltoZ==false)
+  {
+    player.position.x += 0.013;
+  }
+  else if (parseInt(player.position.z) % 2 != 0 && player.position.z>0 && saltoZ==false )
+  {
+    player.position.x -= 0.013;
+  }
+ 
+
+  if ((Math.round(player.position.x * 10) / 10 != Math.round(targetx * 10) / 10 ) || (Math.round(player.position.z * 10) / 10 != Math.round(targetz * 10) / 10)) {
+    requestAnimationFrame(() => MovePlayer(player, targetx, targetz, step, speed));
+  }
+  else if (player.name =="Carro")
+  {
+    player.position.y = -0.3;
+    EscadotesCobras(player);
+    vitoria(player);
+  }
+  else
+  {
+    player.position.y = 0.3; //Assegura que o peõa fica neste y quando para
+    EscadotesCobras(player);
+    vitoria(player);
+  }
+
+
+
 }
 
  
@@ -632,23 +653,19 @@ window.onload = init;
  
 //lógica do jogo
 
-function play(player1, player2, numDado, numJogadas) 
+function play(player1, player2, numDado) 
 {
 
-  //Cada quadrado no tabuleiro é 1x1 
-
-  //Para os peões subirem para o tabuleiro na primeira jogada
-  if(numJogadas < 3) {
-    player1.position.y = player1.position.y + 0.3;
-  }
-
-  //Para o peão amarelo ficar alinhado com a primeira linha do tabuliero 
-  if (player1.position.z == 5.5)
+  //Para o carro subir para o tabuleiro 
+  if (player1.position.x==-5.5 && player1.position.z == 5.5)
   {
-    player1.position.z=4.5;
-  }
+    player1.position.set(-5.5,0.3,4.5);
+  } 
+  
 
-
+  var targetx = player1.position.x; // posição final no eixo dos x para MovePlayer
+  var targetz = player1.position.z; // posição final no eixo dos y para MovePlayer
+  
   //Ciclo para os peões se deslocarem em função do valor do dado
   for(var i=0; i<numDado; i++)
   {
@@ -670,59 +687,68 @@ function play(player1, player2, numDado, numJogadas)
     //-----Mudanças de linha------
     
     //Quando chega ao último quadrado da linha (sentido -> )
-    if(player1.position.x==4.5)
+     if(targetx > 4.4)
     {
-      player1.position.z = player1.position.z - 1;
+      targetz = targetz - 1;
       numDado=numDado-1; //A subida também conta como um passo
     }
       
     //Quando chega ao último quadrado da linha (sentido <- )
-    if(player1.position.x==-4.5 && (parseInt(player1.position.z) % 2 != 0 || player1.position.z<0 ))
+    if(targetx <-4.4 && numJogadas >3)
     {
-      player1.position.z = player1.position.z - 1;
-      numDado=numDado-1; //A subida também conta como um passo
+      targetz = targetz - 1;
+      numDado = numDado-1; //A subida também conta como um passo
     }
     
     
     //---Sentido do movimento do peão em cada linha----
     
     //Linha cujo valor inteiro de Z é par e negativo
-    if(parseInt(player1.position.z) % 2 == 0 && player1.position.z<0 ) 
+    if(parseInt(targetz) % 2 == 0 && targetz<=-0.5 ) 
     {
-      player1.position.x = player1.position.x - 1;
+      targetx = targetx - 1;
     }
+    
     //Linha cujo valor inteiro de Z é par e positivo
-    else if(parseInt(player1.position.z) % 2 == 0 && player1.position.z>0)
+    else if(parseInt(targetz) % 2 == 0 && targetz<=4.5)
     {
-      player1.position.x = player1.position.x + 1;
+      targetx = targetx + 1;
     }
 
     //Linha cujo valor inteiro de Z é impar e negativo
-   else if(parseInt(player1.position.z) % 2 != 0 && player1.position.z<0 )
+   else if(parseInt(targetz) % 2 != 0 && targetz<=4.5)
     {
-      player1.position.x = player1.position.x + 1; //calcular target 
+      targetx = targetx - 1;
     }
 
     //Linha cujo valor inteiro de Z é impar e positivo
-   else if(parseInt(player1.position.z) % 2 != 0 && player1.position.z>0)
+   else if(parseInt(targetz) % 2 != 0 && targetz<=-0.5)
     {
-      player1.position.x = player1.position.x - 1;
+      targetx = targetx + 1;
     }
 
   }
 
+  MovePlayer(player1,targetx,targetz);
 
-  //Vitória 
+}
+
+
+function vitoria(player1)
+{
   if (player1.position.x==-4.5 && player1.position.z==-4.5)
-  {   
-   setTimeout(() => {
-      alert("O " + player1.name + " ganhou!!");
-      window.location.reload();
-    }, 20);
-  }
+    {   
+     setTimeout(() => {
+        alert("O " + player1.name + " ganhou!!");
+        window.location.reload();
+      }, 20);
+    }
+}
 
-// Escadotes
-if (player1.position.x==-0.5 && player1.position.z==4.5 )
+function EscadotesCobras (player1)
+{
+  // Escadotes
+if (Math.round(player1.position.x * 10) / 10 == -0.5 && (Math.round(player1.position.z * 10) / 10 == 4.5))
   {
     player1.position.set(-2.5,player1.position.y,-0.5);
   } 
@@ -730,45 +756,42 @@ if (player1.position.x==-0.5 && player1.position.z==4.5 )
   {
     player1.position.set(3.5,player1.position.y,0.5);
   } 
-
-  else if (player1.position.x==2.5 && player1.position.z==-0.5 )
+  else if ( Math.round(player1.position.x * 10) / 10 == 1.5 && (Math.round(player1.position.z * 10) / 10 == 3.5))
+  {
+    player1.position.set(3.5,player1.position.y,0.5);
+  } 
+  else if ( Math.round(player1.position.x * 10) / 10 == 2.5 && (Math.round(player1.position.z * 10) / 10 == -0.5))
   {
     player1.position.set(3.5,player1.position.y,-2.5);
   } 
-  else if (player1.position.x==-1.5 && player1.position.z==-1.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == -1.5 && (Math.round(player1.position.z * 10) / 10 == -1.5))
   {
     player1.position.set(-2.5,player1.position.y,-3.5);
   }
 
   //Cobras 
-  else if (player1.position.x==-2.5 && player1.position.z==1.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == -2.5 && (Math.round(player1.position.z * 10) / 10 == 1.5) )
   {
     player1.position.set(-4.5,player1.position.y,3.5);
   }
 
-  else if (player1.position.x==4.5 && player1.position.z==-0.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == 4.5 && (Math.round(player1.position.z * 10) / 10 == -0.5) )
   {
     player1.position.set(4.5,player1.position.y,4.5);
   }
 
-  else if (player1.position.x==-0.5 && player1.position.z==-2.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == -0.5 && (Math.round(player1.position.z * 10) / 10 == -2.5))
   {
     player1.position.set(1.5,player1.position.y,-0.5);
   }
 
-  else if (player1.position.x==4.5 && player1.position.z==-4.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == 4.5 && (Math.round(player1.position.z * 10) / 10 == -4.5))
   {
     player1.position.set(2.5,player1.position.y,-2.5);
   }
 
-  else if (player1.position.x==-1.5 && player1.position.z==-4.5 )
+  else if (Math.round(player1.position.x * 10) / 10 == -1.5 && (Math.round(player1.position.z * 10) / 10 == -4.5))
   {
     player1.position.set(-4.5,player1.position.y,-1.5);
   }
-
-
 }
-
-
-
-
