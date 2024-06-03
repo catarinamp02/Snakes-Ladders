@@ -478,7 +478,7 @@ function init() {
   
 
   document.getElementById("btnDado").addEventListener("click", function () {
-      var numDado = 5//Math.floor(Math.random() * (6 - 1 + 1) + 1);
+      var numDado = Math.floor(Math.random() * (6 - 1 + 1) + 1);
       document.getElementById("Dado").innerText = numDado;
 
        if (numJogadas % 2 != 0) 
@@ -563,7 +563,7 @@ function onDocumentKeyDown (event)
 }
 function animate()
 {
-  controls.update();
+  //controls.update();
   renderer.render(scene, activeCamera);
   requestAnimationFrame(animate);
 }
